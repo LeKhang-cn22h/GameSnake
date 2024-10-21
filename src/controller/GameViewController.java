@@ -17,9 +17,10 @@ public class GameViewController {
     private Food food;
     private GameConfig gameConfig;
     private Random random;
-    private Label scoreLabel;
+    @FXML
+    private Label scoreLabel; 
     private Score score;
-
+    
     private boolean isGameOver = false;  // Biến theo dõi trạng thái game
     private Thread gameThread;  // Thread để tự động di chuyển rắn
 
@@ -30,7 +31,7 @@ public class GameViewController {
         snake = new Snake(10, 10, food, gameConfig);
         random = new Random();
         score = new Score(0);
-
+        
         createGameGrid();
         drawSnake();
         drawFood();
@@ -154,8 +155,9 @@ public class GameViewController {
     }
 
     private void updateScoreDisplay() {
-        scoreLabel.setText("Score: " + score.getCurrentScore());
-    }
+    	 Platform.runLater(() -> {
+    	        scoreLabel.setText("Score: " + score.getCurrentScore());
+    	    });    }
 
     // Kết thúc trò chơi
     private void endGame(String message) {

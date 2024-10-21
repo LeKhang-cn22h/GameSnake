@@ -17,7 +17,6 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.setTitle("Grid Button Game");
             primaryStage.show();
-
             // Đặt focus vào root để nhận sự kiện bàn phím
             root.requestFocus();
         } catch (Exception e) {
