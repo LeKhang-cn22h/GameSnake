@@ -15,7 +15,7 @@ public class Snake {
     public Snake(int startRow, int startCol, Food food, GameConfig gameConfig) {
         body = new LinkedList<>();
         body.add(new Position(startRow, startCol));  // Khởi tạo vị trí đầu tiên của rắn
-        currentDirection = "RIGHT";  // Hướng di chuyển ban đầu
+        currentDirection = "UP";  // Hướng di chuyển ban đầu
         this.food = food;  // Gán tham chiếu thức ăn
         this.gameConfig = gameConfig;  // Gán tham chiếu cấu hình game
         random = new Random();  // Khởi tạo đối tượng Random

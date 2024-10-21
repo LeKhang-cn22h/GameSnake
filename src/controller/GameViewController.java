@@ -35,8 +35,19 @@ public class GameViewController {
         drawSnake();
         drawFood();
 
-        gameGrid.setOnKeyPressed(this::handleKeyPress);
-        gameGrid.requestFocus();
+        // Đặt focus vào gameGrid và đăng ký sự kiện bàn phím sau khi Scene đã được khởi tạo
+        Platform.runLater(() -> {
+            gameGrid.getScene().setOnKeyPressed(event -> {
+                switch (event.getCode()) {
+                    case UP: snake.changeDirection("UP"); break;
+                    case DOWN: snake.changeDirection("DOWN"); break;
+                    case LEFT: snake.changeDirection("LEFT"); break;
+                    case RIGHT: snake.changeDirection("RIGHT"); break;
+                    default: break;
+                }
+            });
+            gameGrid.requestFocus();  // Đảm bảo nhận sự kiện bàn phím
+        });
 
         // Tạo và bắt đầu thread để tự động di chuyển rắn
         startGameThread();
