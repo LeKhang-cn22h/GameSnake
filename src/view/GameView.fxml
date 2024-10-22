@@ -5,6 +5,6 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameViewController">
-<Label fx:id="scoreLabel" style="-fx-font-size: 20px; -fx-text-fill: black;" text="Score: 100" />
+<Label fx:id="scoreLabel" style="-fx-font-size: 20px; -fx-text-fill: black;" text="Score: 0" />
     <GridPane fx:id="gameGrid" alignment="CENTER" hgap="1" vgap="1" />
 </VBox>

@@ -3,11 +3,15 @@ package controller;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.*;
 
+import java.util.Optional;
 import java.util.Random;
 
 public class GameViewController {
@@ -60,6 +64,8 @@ public class GameViewController {
                 Button button = new Button();
                 button.setPrefSize(gameConfig.getButtonWidth(), gameConfig.getButtonHeight());
                 button.setStyle("-fx-background-color: white;");
+                button.setFocusTraversable(false);
+
                 gameGrid.add(button, col, row);
             }
         }
@@ -102,13 +108,13 @@ public class GameViewController {
         gameThread = new Thread(() -> {
             while (!isGameOver) {
                 Platform.runLater(() -> {
-                    snake.move();
-                    checkCollision();
+                	checkCollision();
+                	snake.move();
                     drawSnake();
                 });
 
                 try {
-                    Thread.sleep(500);  // Rắn di chuyển mỗi 500ms
+                    Thread.sleep(200);  // Rắn di chuyển mỗi 500ms
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -123,7 +129,10 @@ public class GameViewController {
         Position head = snake.getHead();
 
         // Kiểm tra va chạm với tường
-        if (head.getRow() < 0 || head.getRow() >= gameConfig.getMapSize() || head.getCol() < 0 || head.getCol() >= gameConfig.getMapSize()) {
+        if (head.getRow() < 0 || 
+        		head.getRow() >= gameConfig.getMapSize() || 
+        		head.getCol() < 0 || 
+        		head.getCol() >= gameConfig.getMapSize()) {
             endGame("Game Over: You hit the wall!");
         }
 
@@ -136,33 +145,70 @@ public class GameViewController {
 
         // Kiểm tra rắn ăn mồi
         if (head.equals(food.getPosition())) {
-            snake.grow();
             score.increaseScore(10);
+            System.out.println("Score increased, current score: " + score.getCurrentScore());  // Kiểm tra ở đây
             spawnFood();
             updateScoreDisplay();
+            
         }
 
         // Điều kiện thắng: ví dụ đạt 100 điểm
-        if (score.getCurrentScore() >= 100) {
+        if (score.getCurrentScore() > 100000) {
             endGame("Congratulations! You win!");
         }
+        
+        
     }
 
     private void spawnFood() {
-        int row = random.nextInt(gameConfig.getMapSize());
-        int col = random.nextInt(gameConfig.getMapSize());
-        food.setPosition(new Position(row, col));
+    	int row;
+    	int col;
+    	do {
+         row = random.nextInt(gameConfig.getMapSize());
+        col = random.nextInt(gameConfig.getMapSize());
+        
+    }while (isFoodOnSnake(new Position(row, col)));
+    	food.setPosition(new Position(row, col));
+    	}
+    private boolean isFoodOnSnake(Position foodPosition) {
+      for (Position position : snake.getBody()) {
+          if (position.equals(foodPosition)) {
+              return true;
+          }
+      }
+      return false;
+  }
+    private void updateScoreDisplay() {
+        Platform.runLater(() -> {
+            scoreLabel.setText("Score: " + score.getCurrentScore());
+        });
     }
 
-    private void updateScoreDisplay() {
-    	 Platform.runLater(() -> {
-    	        scoreLabel.setText("Score: " + score.getCurrentScore());
-    	    });    }
 
     // Kết thúc trò chơi
     private void endGame(String message) {
         isGameOver = true;
-        System.out.println(message);
-        gameThread.interrupt();
+
+        // Hiển thị thông báo kết thúc game
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Kết thúc trò chơi");
+        alert.setHeaderText(message);
+        alert.setContentText("Bạn có muốn chơi lại hay thoát?");
+
+        ButtonType buttonPlayAgain = new ButtonType("Chơi lại");
+        ButtonType buttonExit = new ButtonType("Thoát");
+
+        alert.getButtonTypes().setAll(buttonPlayAgain, buttonExit);
+
+        // Hiển thị hộp thoại và chờ phản hồi của người dùng
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == buttonPlayAgain) {
+//            restartGame();  // Hàm để khởi động lại trò chơi
+        } else {
+            Platform.exit();  // Thoát ứng dụng
+            System.exit(0);
+        }
+
     }
 }

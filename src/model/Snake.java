@@ -15,7 +15,7 @@ public class Snake {
     public Snake(int startRow, int startCol, Food food, GameConfig gameConfig) {
         body = new LinkedList<>();
         body.add(new Position(startRow, startCol));  // Khởi tạo vị trí đầu tiên của rắn
-        currentDirection = "UP";  // Hướng di chuyển ban đầu
+        currentDirection = "NONE";  // Hướng di chuyển ban đầu
         this.food = food;  // Gán tham chiếu thức ăn
         this.gameConfig = gameConfig;  // Gán tham chiếu cấu hình game
         random = new Random();  // Khởi tạo đối tượng Random
@@ -35,7 +35,7 @@ public class Snake {
         // Kiểm tra nếu đầu rắn ăn trúng thức ăn
         if (newHead.equals(food.getPosition())) {
             grow();  // Nếu ăn được mồi, rắn dài ra
-            food.setPosition(generateRandomFoodPosition());  // Đặt lại vị trí thức ăn ngẫu nhiên
+//            food.setPosition(generateRandomFoodPosition());  // Đặt lại vị trí thức ăn ngẫu nhiên
         } else {
             body.add(0, newHead);  // Nếu không ăn mồi, di chuyển đầu rắn và giữ nguyên chiều dài
             body.remove(body.size()-1);  // Loại bỏ phần đuôi để rắn duy trì kích thước
@@ -81,26 +81,45 @@ public class Snake {
     }
 
     // Phương thức tạo vị trí ngẫu nhiên cho thức ăn
-    private Position generateRandomFoodPosition() {
-        int mapSize = gameConfig.getMapSize();
-        int row = random.nextInt(mapSize);  // Random hàng
-        int col = random.nextInt(mapSize);  // Random cột
-
-        // Đảm bảo thức ăn không xuất hiện ở vị trí của rắn
-        while (isFoodOnSnake(new Position(row, col))) {
-            row = random.nextInt(mapSize);
-            col = random.nextInt(mapSize);
-        }
-        return new Position(row, col);  // Trả về vị trí mới của thức ăn
-    }
+//    private Position generateRandomFoodPosition() {
+//        int mapSize = gameConfig.getMapSize();
+//        int row = random.nextInt(mapSize);  // Random hàng
+//        int col = random.nextInt(mapSize);  // Random cột
+//
+////        // Đảm bảo thức ăn không xuất hiện ở vị trí của rắn
+//        while (isFoodOnSnake(new Position(row, col))) {
+//            row = random.nextInt(mapSize);
+//            col = random.nextInt(mapSize);
+////        }
+//        return new Position(row, col);  // Trả về vị trí mới của thức ăn
+//    }
 
     // Kiểm tra nếu thức ăn trùng với vị trí của rắn
-    private boolean isFoodOnSnake(Position foodPosition) {
-        for (Position position : body) {
-            if (position.equals(foodPosition)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    private boolean isFoodOnSnake(Position foodPosition) {
+//        for (Position position : body) {
+//            if (position.equals(foodPosition)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+//    private Position generateRandomFoodPosition() {
+//  int mapSize = gameConfig.getMapSize();
+//  int row;
+//  int col;
+//    do {
+//    	row = random.nextInt(mapSize);  // Random hàng
+//       col = random.nextInt(mapSize);  // Random cột
+//    }while (isFoodOnSnake(new Position(row, col))) ;
+//    	return new Position(row, col);}
+//    private boolean isFoodOnSnake(Position foodPosition) {
+//      for (Position position : body) {
+//          if (position.equals(foodPosition)) {
+//              return true;
+//          }
+//      }
+//      return false;
+//  }
+
+    
 }
