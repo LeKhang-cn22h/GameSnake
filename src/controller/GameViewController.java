@@ -30,15 +30,17 @@ public class GameViewController {
 
     @FXML
     public void initialize() {
+    	isGameOver = false;
+    	gameGrid.getChildren().clear();
         gameConfig = new GameConfig(20, 30, 30);
         food = new Food(5, 5);
         snake = new Snake(10, 10, food, gameConfig);
         random = new Random();
         score = new Score(0);
+        updateScoreDisplay();
         
         createGameGrid();
         drawSnake();
-        drawFood();
 
         // Đặt focus vào gameGrid và đăng ký sự kiện bàn phím sau khi Scene đã được khởi tạo
         Platform.runLater(() -> {
@@ -53,7 +55,6 @@ public class GameViewController {
             });
             gameGrid.requestFocus();  // Đảm bảo nhận sự kiện bàn phím
         });
-
         // Tạo và bắt đầu thread để tự động di chuyển rắn
         startGameThread();
     }
@@ -69,6 +70,8 @@ public class GameViewController {
                 gameGrid.add(button, col, row);
             }
         }
+        
+        System.out.println("Tạo bàn cờ");
     }
 
     private void drawSnake() {
@@ -77,13 +80,13 @@ public class GameViewController {
                 Button button = (Button) gameGrid.getChildren().get(row * gameConfig.getMapSize() + col);
                 button.setStyle("-fx-background-color: white;");
             }
+
         }
 
         for (Position position : snake.getBody()) {
             Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
             button.setStyle("-fx-background-color: yellow;");
         }
-
         drawFood();
     }
 
@@ -108,15 +111,17 @@ public class GameViewController {
         gameThread = new Thread(() -> {
             while (!isGameOver) {
                 Platform.runLater(() -> {
-                	checkCollision();
                 	snake.move();
+                	checkCollision();
                     drawSnake();
                 });
 
                 try {
                     Thread.sleep(200);  // Rắn di chuyển mỗi 500ms
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
+                	Thread.currentThread().interrupt(); // Xử lý khi bị ngắt
+                    System.out.println("Luồng bị ngắt!");
                 }
             }
         });
@@ -188,7 +193,6 @@ public class GameViewController {
     // Kết thúc trò chơi
     private void endGame(String message) {
         isGameOver = true;
-
         // Hiển thị thông báo kết thúc game
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Kết thúc trò chơi");
@@ -204,7 +208,7 @@ public class GameViewController {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonPlayAgain) {
-//            restartGame();  // Hàm để khởi động lại trò chơi
+        	initialize();
         } else {
             Platform.exit();  // Thoát ứng dụng
             System.exit(0);
