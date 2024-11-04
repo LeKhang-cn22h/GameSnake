@@ -1,7 +1,7 @@
 module game {
     requires javafx.controls;
     requires javafx.fxml;
-
+    requires java.sql;
     // Mở package 'application' để JavaFX có thể truy cập vào các class trong đó (như Main.java, các controller và view)
     opens application to javafx.graphics, javafx.fxml;
 
@@ -9,4 +9,5 @@ module game {
     opens model to javafx.graphics, javafx.fxml;
     opens view to javafx.graphics, javafx.fxml;
     opens controller to javafx.graphics, javafx.fxml;
+    opens database to javafx.graphics, javafx.fxml;
 }
