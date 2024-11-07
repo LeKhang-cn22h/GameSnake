@@ -33,10 +33,14 @@ package application;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 public class Main extends Application {
+
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -44,8 +48,8 @@ public class Main extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("/view/interface.fxml"));
             Scene scene = new Scene(root);
 //            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
-            primaryStage.setScene(scene);
+            
+	    	primaryStage.setScene(scene);
             primaryStage.setTitle("Login");
             primaryStage.show();
             // Đặt focus vào root để nhận sự kiện bàn phím

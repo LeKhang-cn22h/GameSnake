@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -10,9 +15,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
    <children>
-      <BorderPane layoutX="-8.0" prefHeight="500.0" prefWidth="700.0">
+      <BorderPane layoutX="-8.0" prefHeight="500.0" prefWidth="900.0">
          <left>
             <AnchorPane prefHeight="500.0" prefWidth="522.0" BorderPane.alignment="CENTER">
                <children>
@@ -36,6 +41,8 @@
                      </font>
                   </Text>
                   <Button fx:id="btnRegister" layoutX="190.0" layoutY="395.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="38.0" prefWidth="90.0" text="Đăng ký" />
+                  <TextField fx:id="txtPassShow" layoutX="101.0" layoutY="282.0" promptText="Mật khẩu" style="-fx-background-color: transparent; -fx-border-color: #0099FF; -fx-border-width: 0px 0px 2px 0px;" visible="false" />
+                  <Button fx:id="btnShowHide" layoutX="288.0" layoutY="283.0" mnemonicParsing="false" onAction="#handleShowHide" prefHeight="29.0" prefWidth="36.0" text="S" />
                </children>
             </AnchorPane>
          </right>

@@ -12,6 +12,9 @@ import javafx.scene.control.PasswordField;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import database.DatabaseConnection;
 public class SignController {
 	 @FXML
 	    private TextField txtUsername;
@@ -28,7 +31,28 @@ public class SignController {
 	        String username = txtUsername.getText();
 	        String password = txtPassword.getText();
 	        String confirmPassword = txtConfirmPassword.getText();
-
+	        try (Connection conn = DatabaseConnection.getConnection()) {
+	            String query = "SELECT COUNT(*) FROM users WHERE username = ?";
+	            PreparedStatement stmt = conn.prepareStatement(query);
+	            stmt.setString(1, username);
+	            ResultSet rs = stmt.executeQuery();
+	            rs.next();
+	            if (rs.getInt(1)>0) {
+		            // Hiển thị thông báo username đã tồn tại
+		            Alert alert = new Alert(AlertType.INFORMATION);
+		            alert.setContentText("Username này đã tồn tại! Vui lòng đặt tên khác.");
+		            alert.showAndWait();
+		            return;
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        if(password.length()<6) {
+	            Alert alert = new Alert(AlertType.ERROR);
+	            alert.setContentText("Mật khẩu cần ít nhất 6 kí tự!");
+	            alert.show();
+	        	return;
+	        }
 	        if (!password.equals(confirmPassword)) {
 	            // Hiển thị cảnh báo nếu mật khẩu không khớp
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -38,7 +62,7 @@ public class SignController {
 	        }
 
 	        // Kết nối đến database và thêm tài khoản mới
-	        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/snake", "username", "password")) {
+	        try (Connection conn = DatabaseConnection.getConnection()) {
 	            String query = "INSERT INTO users (username, password) VALUES (?, ?)";
 	            PreparedStatement stmt = conn.prepareStatement(query);
 	            stmt.setString(1, username);
