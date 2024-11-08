@@ -13,13 +13,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
-import java.io.IOException;
+//import java.io.IOException;
 import javafx.scene.Parent;
 public class LoginController {
 	@FXML
     private TextField txtUsername; // Tên người dùng
 	 @FXML
-	private PasswordField txtPassword; // Mật khẩu
+	private PasswordField txtPassword = new PasswordField(); // Mật khẩu
+	 @FXML
+	private TextField txtPassShow = new TextField(); // Show/Hide mật khẩu
+	 @FXML
+	private Button btnShowHide;
 	 @FXML
 	 private Button btnLogin;// nút đăng nhập
 	 @FXML
@@ -29,10 +33,24 @@ public class LoginController {
 		String username= txtUsername.getText();
 		String password=txtPassword.getText();
 		if (checkLogin(username,password)) {
-			showAlert("đăng nhập thành công","chào mừng"+username+"!");
+	        try {
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GameView.fxml"));
+	            Parent root = loader.load();
+	            Stage stage = (Stage) btnRegister.getScene().getWindow();
+	            // Đóng cửa sổ đăng nhập
+	            stage.close(); 
+	            // Tạo một cửa sổ mới cho trang đăng ký
+	            Stage newStage = new Stage();
+	            newStage.setScene(new Scene(root));
+	            newStage.setTitle("Game Snake");
+	            newStage.show();
+				showAlert("đăng nhập thành công","chào mừng"+username+"!");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
 		}
 		else {
-			showAlert("đăng nhaạp thất bại","tên người dùng hoặc mật khẩu không đúng");
+			showAlert("đăng nhập thất bại","tên người dùng hoặc mật khẩu không đúng");
 		}
 	}
 	private boolean checkLogin(String username, String password) {
@@ -54,8 +72,8 @@ public class LoginController {
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
+	
     @FXML
-
     private void handleRegister() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/sign.fxml"));
@@ -73,5 +91,24 @@ public class LoginController {
         }
     }
 
+    @FXML
+    private void handleShowHide() {
+        //Ràng buộc txtPassword bằng với txtPassShow
+        
+
+        if (txtPassword.isVisible()) {
+            // Hiển thị mật khẩu (hiện TextField, ẩn txtPassword)
+            txtPassword.setVisible(false);
+            txtPassShow.setVisible(true);
+            txtPassShow.setText(txtPassword.getText());
+            btnShowHide.setText("Hide");
+        } else {
+            // Ẩn mật khẩu (hiện txtPassword, ẩn TextField)
+            txtPassword.setVisible(true);
+            txtPassShow.setVisible(false);
+            txtPassword.setText(txtPassShow.getText());
+            btnShowHide.setText("Show");
+        }
+    }
 	
 }
