@@ -30,6 +30,8 @@
 //}
 package application;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -43,21 +45,35 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try {
-            // Tải giao diện đăng nhập (LoginView.fxml) đầu tiên
-            Parent root = FXMLLoader.load(getClass().getResource("/view/interface.fxml"));
-            Scene scene = new Scene(root);
-//            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-            
-	    	primaryStage.setScene(scene);
-            primaryStage.setTitle("Login");
-            primaryStage.show();
-            // Đặt focus vào root để nhận sự kiện bàn phím
-            root.requestFocus();
-        } catch (Exception e) {
-            e.printStackTrace();
+        String filePath = "user.txt";
+        File file = new File(filePath);
+    	String title;
+    	String resource;
+        if(!file.exists()) {
+        	title = "Login";
+        	resource = "/view/interface.fxml";
         }
+        else {
+        	title = "Game Snake";
+        	resource = "/view/menuView.fxml";
+        }
+
+	        try {
+		            // Tải giao diện đăng nhập (LoginView.fxml) đầu tiên
+		            Parent root = FXMLLoader.load(getClass().getResource(resource));
+		            Scene scene = new Scene(root);
+		//            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		            
+			    	primaryStage.setScene(scene);
+		            primaryStage.setTitle(title);
+		            primaryStage.show();
+		            // Đặt focus vào root để nhận sự kiện bàn phím
+		            root.requestFocus();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
     }
+
 
     public static void main(String[] args) {
         launch(args);
