@@ -11,6 +11,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.*;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
 
@@ -24,7 +28,8 @@ public class GameViewController {
     @FXML
     private Label scoreLabel; 
     private Score score;
-    
+    @FXML
+    private Label userTxt;
     private boolean isGameOver = false;  // Biến theo dõi trạng thái game
     private Thread gameThread;  // Thread để tự động di chuyển rắn
 
@@ -41,7 +46,8 @@ public class GameViewController {
         
         createGameGrid();
         drawSnake();
-
+        String username = readUsernameFromFile();
+        userTxt.setText( username); 
         // Đặt focus vào gameGrid và đăng ký sự kiện bàn phím sau khi Scene đã được khởi tạo
         Platform.runLater(() -> {
             gameGrid.getScene().setOnKeyPressed(event -> {
@@ -94,7 +100,19 @@ public class GameViewController {
         Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
         foodButton.setStyle("-fx-background-color: red;");
     }
-
+    @FXML
+    private String readUsernameFromFile() {
+        File file = new File("user.txt");
+        String username = "Player"; // Mặc định nếu không tìm thấy file
+        if (file.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                username = reader.readLine(); // Đọc tên người dùng từ file
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return username;
+    }
     @FXML
     private void handleKeyPress(KeyEvent event) {
         switch (event.getCode()) {
@@ -188,8 +206,22 @@ public class GameViewController {
             scoreLabel.setText("Score: " + score.getCurrentScore());
         });
     }
+    @FXML
+//kết thúc trò chơi bàn phím tắt
+    private void end() {
+    	Alert alertend = new Alert(AlertType.CONFIRMATION);
+    	alertend.setTitle("Thông báo");
+        alertend.setContentText("Bạn có chắc muốn chơi lại ván mới?");
+        ButtonType buttonPlayAgain = new ButtonType("Chơi lại");
+        ButtonType buttonExit = new ButtonType("Thoát",ButtonType.CLOSE.getButtonData());
 
+        alertend.getButtonTypes().setAll(buttonPlayAgain, buttonExit);
+        Optional<ButtonType> result = alertend.showAndWait();
 
+        if (result.isPresent() && result.get() == buttonPlayAgain) {
+        	initialize();
+        }
+    }
     // Kết thúc trò chơi
     private void endGame(String message) {
         isGameOver = true;
