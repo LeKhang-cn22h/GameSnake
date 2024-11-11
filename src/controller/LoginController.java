@@ -40,10 +40,9 @@ public class LoginController {
         String password = txtPassword.getText();
         String passwordShow = txtPassShow.getText();
 
-        if (checkLogin(username, password) || checkLogin(username, passwordShow)) {
+        if (checkLogin(username, password) && checkLogin(username, passwordShow)) {
             saveUserToFile(username); // Lưu tên người dùng vào file
             proceedToGame(); // Chuyển sang màn hình game
-            showAlert("Đăng nhập thành công", "Chào mừng " + username + "!");
         } else {
             showAlert("Đăng nhập thất bại", "Tên người dùng hoặc mật khẩu không đúng");
         }
@@ -64,15 +63,15 @@ public class LoginController {
     }
 
     private void saveUserToFile(String username) {
-        File file = new File("user.txt");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+    	String filePath = "user.txt";
+        try (FileWriter writer = new FileWriter(filePath)) {
             writer.write(username);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void proceedToGame() {
+    public void proceedToGame() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/menuView.fxml"));
             Parent root = loader.load();
