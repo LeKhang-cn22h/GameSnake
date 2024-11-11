@@ -1,10 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameViewController">
-<Label fx:id="scoreLabel" style="-fx-font-size: 20px; -fx-text-fill: black;" text="Score: 0" />
-    <GridPane fx:id="gameGrid" alignment="CENTER" hgap="1" vgap="1" />
-</VBox>
+<AnchorPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameViewController">
+    <BorderPane>
+        <center>
+            <VBox alignment="CENTER">
+                <GridPane fx:id="gameGrid" alignment="CENTER" hgap="1" vgap="1" />
+            </VBox>
+        </center>
+      <top>
+             <Label fx:id="scoreLabel" style="-fx-font-size: 20px; -fx-text-fill: black;" text="Score: 0" BorderPane.alignment="CENTER" />
+      </top>
+      <right>
+         <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #DACCB1;" BorderPane.alignment="CENTER">
+            <children>
+               <MenuButton fx:id="menuButton" mnemonicParsing="false" onAction="#pauseGame" onMouseClicked="#pauseGame" prefHeight="28.0" prefWidth="78.0" text="Dừng">
+                 <items>
+                   <MenuItem fx:id="contiMenuItem" mnemonicParsing="false" onAction="#resumeGame" text="Tiếp tục">
+                        <accelerator>
+                           <KeyCodeCombination alt="UP" code="P" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        </accelerator>
+                     </MenuItem>
+                   <MenuItem fx:id="newGameMenuItem" mnemonicParsing="false" onAction="#end" text="Ván mới">
+                        <accelerator>
+                           <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        </accelerator>
+                     </MenuItem>
+                     <MenuItem fx:id="endGameMenuItem" mnemonicParsing="false" onAction="#switchMenuMain" text="Kết thúc">
+                        <accelerator>
+                           <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        </accelerator>
+                     </MenuItem>
+                 </items>
+                  <font>
+                     <Font size="13.0" />
+                  </font>
+               </MenuButton>
+               <ImageView fitHeight="455.0" fitWidth="466.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@menu.jpg" />
+                  </image>
+               </ImageView>
+               <Label fx:id="userTxt" alignment="CENTER" contentDisplay="CENTER" text="Người chơi">
+                  <font>
+                     <Font name="System Bold" size="28.0" />
+                  </font>
+               </Label>
+            </children>
+         </VBox>
+      </right>
+    </BorderPane>
+</AnchorPane>

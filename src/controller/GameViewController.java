@@ -2,15 +2,24 @@ package controller;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import model.*;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
 
@@ -24,9 +33,14 @@ public class GameViewController {
     @FXML
     private Label scoreLabel; 
     private Score score;
-    
+    @FXML
+    private Label userTxt;
     private boolean isGameOver = false;  // Biến theo dõi trạng thái game
     private Thread gameThread;  // Thread để tự động di chuyển rắn
+    @FXML
+    private boolean isPaused = false;
+    @FXML
+    private MenuButton menuButton;
 
     @FXML
     public void initialize() {
@@ -41,7 +55,11 @@ public class GameViewController {
         
         createGameGrid();
         drawSnake();
+        String username = readUsernameFromFile();
+        userTxt.setText( username); 
+        menuButton.setFocusTraversable(false);
 
+        menuButton.setOnShowing(event -> pauseGame());
         // Đặt focus vào gameGrid và đăng ký sự kiện bàn phím sau khi Scene đã được khởi tạo
         Platform.runLater(() -> {
             gameGrid.getScene().setOnKeyPressed(event -> {
@@ -94,7 +112,19 @@ public class GameViewController {
         Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
         foodButton.setStyle("-fx-background-color: red;");
     }
-
+    @FXML
+    private String readUsernameFromFile() {
+        File file = new File("user.txt");
+        String username = "Player"; // Mặc định nếu không tìm thấy file
+        if (file.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                username = reader.readLine(); // Đọc tên người dùng từ file
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return username;
+    }
     @FXML
     private void handleKeyPress(KeyEvent event) {
         switch (event.getCode()) {
@@ -110,12 +140,13 @@ public class GameViewController {
     private void startGameThread() {
         gameThread = new Thread(() -> {
             while (!isGameOver) {
+            	if (!isPaused) {
                 Platform.runLater(() -> {
                 	snake.move();
                 	checkCollision();
                     drawSnake();
                 });
-
+            	}
                 try {
                     Thread.sleep(200);  // Rắn di chuyển mỗi 500ms
                 } catch (InterruptedException e) {
@@ -128,7 +159,16 @@ public class GameViewController {
         gameThread.setDaemon(true);
         gameThread.start();
     }
+    @FXML
+    private void pauseGame() {
+        isPaused = true;
+    }
 
+    @FXML
+    private void resumeGame() {
+        isPaused = false;
+        gameGrid.requestFocus();
+    }
     // Kiểm tra va chạm
     private void checkCollision() {
         Position head = snake.getHead();
@@ -188,8 +228,22 @@ public class GameViewController {
             scoreLabel.setText("Score: " + score.getCurrentScore());
         });
     }
+    @FXML
+//kết thúc trò chơi bàn phím tắt
+    private void end() {
+    	Alert alertend = new Alert(AlertType.CONFIRMATION);
+    	alertend.setTitle("Thông báo");
+        alertend.setContentText("Bạn có chắc muốn chơi lại ván mới?");
+        ButtonType buttonPlayAgain = new ButtonType("Chơi lại");
+        ButtonType buttonExit = new ButtonType("Đóng",ButtonType.CLOSE.getButtonData());
 
+        alertend.getButtonTypes().setAll(buttonPlayAgain, buttonExit);
+        Optional<ButtonType> result = alertend.showAndWait();
 
+        if (result.isPresent() && result.get() == buttonPlayAgain) {
+        	initialize();
+        }
+    }
     // Kết thúc trò chơi
     private void endGame(String message) {
         isGameOver = true;
@@ -215,4 +269,31 @@ public class GameViewController {
         }
 
     }
+    @FXML
+    private void switchMenuMain() {
+    	Alert alertMain = new Alert(AlertType.CONFIRMATION);
+    	alertMain.setTitle("Thông báo");
+    	alertMain.setHeaderText("");
+        alertMain.setContentText("Bạn có chắc chắn muốn trở về trang chủ ?");
+        ButtonType buttonMain = new ButtonType("Có");
+        ButtonType buttonExit = new ButtonType("Thoát",ButtonType.CLOSE.getButtonData());
+
+        alertMain.getButtonTypes().setAll(buttonMain, buttonExit);
+        Optional<ButtonType> result = alertMain.showAndWait();
+        if (result.isPresent() && result.get() == buttonMain) {
+        	try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/menuView.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) scoreLabel.getScene().getWindow();
+                stage.close(); // Đóng cửa sổ đăng nhập
+                Stage newStage = new Stage();
+                newStage.setScene(new Scene(root));
+                newStage.setTitle("Game Snake");
+                newStage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
