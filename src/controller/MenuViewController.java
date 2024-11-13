@@ -22,6 +22,7 @@ import javafx.scene.Parent;
 
 public class MenuViewController {
 
+
     @FXML
     private Label playerLabel;
     @FXML
@@ -96,6 +97,22 @@ public class MenuViewController {
 
             // Đặt giao diện mới cho Stage
             stage.setScene(new Scene(gameViewRoot));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+   
+
+    @FXML
+    private void openRankingView(ActionEvent event) {
+        try {
+            // Tải FXML cho bảng xếp hạng
+            Parent rankingViewRoot = FXMLLoader.load(getClass().getResource("/view/Leaderboard.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Đặt giao diện mới cho Stage
+            stage.setScene(new Scene(rankingViewRoot));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

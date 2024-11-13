@@ -29,7 +29,7 @@
                         <Font name="System Bold" size="21.0" />
                      </font>
                   </Button>
-                  <Button fx:id="rankButton" layoutX="14.0" layoutY="104.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="131.0" style="-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5); -fx-background-radius: 50; -fx-border-radius: 50; -fx-background-color: #99FF99;" text="Xếp hạng">
+                  <Button fx:id="rankButton" layoutX="14.0" layoutY="104.0" mnemonicParsing="false" onAction="#openRankingView" prefHeight="37.0" prefWidth="131.0" style="-fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5); -fx-background-radius: 50; -fx-border-radius: 50; -fx-background-color: #99FF99;" text="Xếp hạng">
                      <font>
                         <Font size="21.0" />
                      </font>

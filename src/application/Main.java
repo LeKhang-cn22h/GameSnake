@@ -32,6 +32,7 @@ package application;
 
 import java.io.File;
 
+import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -49,7 +50,7 @@ public class Main extends Application {
         File file = new File(filePath);
     	String title;
     	String resource;
-        if(!file.exists()) {
+        if(!file.exists() || file.length()==0) {
         	title = "Login";
         	resource = "/view/interface.fxml";
         }
@@ -77,5 +78,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        DatabaseConnection.closeConnection();
+
     }
 }

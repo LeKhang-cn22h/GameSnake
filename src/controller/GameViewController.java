@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
 
+import DAO.ScoreDAO;
+
 public class GameViewController {
+	
     @FXML
     private GridPane gameGrid;
     private Snake snake;
@@ -244,9 +247,13 @@ public class GameViewController {
         	initialize();
         }
     }
+    
     // Kết thúc trò chơi
     private void endGame(String message) {
         isGameOver = true;
+        String username = readUsernameFromFile();
+        int diem=score.getCurrentScore();
+        new ScoreDAO().saveScore(diem, username);
         // Hiển thị thông báo kết thúc game
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Kết thúc trò chơi");
