@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
 
+import DAO.ScoreDAO;
+
 public class GameViewController {
+	
     @FXML
     private GridPane gameGrid;
     private Snake snake;
@@ -109,9 +112,21 @@ public class GameViewController {
     }
 
     private void drawFood() {
-        Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
-        foodButton.setStyle("-fx-background-color: red;");
+        // Sử dụng getResource() để lấy đường dẫn ảnh chính xác
+        String imageUrl = getClass().getResource("/view/image_codinh/dua_hau.png").toExternalForm();
+
+        // Đặt style cho Button để hiển thị ảnh
+        Button foodButton = (Button) gameGrid.getChildren().get(
+            food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
+        
+        foodButton.setStyle("-fx-background-image: url('" + imageUrl + "'); " +
+                            "-fx-background-size: 33px 33px; " +
+                            "-fx-background-repeat: no-repeat; " +
+                            "-fx-background-color: transparent;"+
+                            "-fx-background-position: center;");
     }
+
+
     @FXML
     private String readUsernameFromFile() {
         File file = new File("user.txt");
@@ -244,9 +259,13 @@ public class GameViewController {
         	initialize();
         }
     }
+    
     // Kết thúc trò chơi
     private void endGame(String message) {
         isGameOver = true;
+        String username = readUsernameFromFile();
+        int diem=score.getCurrentScore();
+        new ScoreDAO().saveScore(diem, username);
         // Hiển thị thông báo kết thúc game
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Kết thúc trò chơi");

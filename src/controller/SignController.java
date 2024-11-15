@@ -1,97 +1,100 @@
 package controller;
+
+import DAO.UserDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
-import java.sql.Connection;
-//import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import model.User;
 
-import database.DatabaseConnection;
 public class SignController {
-	 @FXML
-	    private TextField txtUsername;
-	    @FXML
-	    private PasswordField txtPassword;
-	    @FXML
-	    private PasswordField txtConfirmPassword;
-	    @FXML
-	    private Button btnRegister;
-	    @FXML
-	    private Button btnLogin;
-	    @FXML
-	    private void handleRegister() {
-	        String username = txtUsername.getText();
-	        String password = txtPassword.getText();
-	        String confirmPassword = txtConfirmPassword.getText();
-	        try (Connection conn = DatabaseConnection.getConnection()) {
-	            String query = "SELECT COUNT(*) FROM users WHERE username = ?";
-	            PreparedStatement stmt = conn.prepareStatement(query);
-	            stmt.setString(1, username);
-	            ResultSet rs = stmt.executeQuery();
-	            rs.next();
-	            if (rs.getInt(1)>0) {
-		            // Hiển thị thông báo username đã tồn tại
-		            Alert alert = new Alert(AlertType.INFORMATION);
-		            alert.setContentText("Username này đã tồn tại! Vui lòng đặt tên khác.");
-		            alert.showAndWait();
-		            return;
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        if(password.length()<6) {
-	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setContentText("Mật khẩu cần ít nhất 6 kí tự!");
-	            alert.show();
-	        	return;
-	        }
-	        if (!password.equals(confirmPassword)) {
-	            // Hiển thị cảnh báo nếu mật khẩu không khớp
-	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setContentText("Mật khẩu không khớp.");
-	            alert.show();
-	            return;
-	        }
 
-	        // Kết nối đến database và thêm tài khoản mới
-	        try (Connection conn = DatabaseConnection.getConnection()) {
-	            String query = "INSERT INTO users (username, password) VALUES (?, ?)";
-	            PreparedStatement stmt = conn.prepareStatement(query);
-	            stmt.setString(1, username);
-	            stmt.setString(2, password);
+    @FXML
+    private TextField txtUsername;
 
-	            stmt.executeUpdate();
-	            
-	            // Hiển thị thông báo thành công và điều hướng về trang Đăng nhập
-	            Alert alert = new Alert(AlertType.INFORMATION);
-	            alert.setContentText("Đăng ký thành công! Vui lòng đăng nhập.");
-	            alert.showAndWait();
+    @FXML
+    private PasswordField txtPassword;
 
-	            handleLogin(); // Điều hướng về trang Đăng nhập
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
+    @FXML
+    private PasswordField txtConfirmPassword;
 
-	    // Phương thức điều hướng về trang Đăng nhập
-	    @FXML
-	    private void handleLogin() {
-	        try {
-	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/interface.fxml"));
-	            Parent root = loader.load();
-	            Stage stage = (Stage) btnLogin.getScene().getWindow();
-	            stage.setScene(new Scene(root));
-	            stage.setTitle("Đăng nhập");
-	            stage.show();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-}}
+    @FXML
+    private Button btnRegister;
+
+    @FXML
+    private Button btnLogin;
+
+    private UserDAO userDAO;
+
+    public SignController() {
+        userDAO = new UserDAO(); // Khởi tạo UserDAO
+    }
+
+    @FXML
+    private void handleRegister() {
+        String username = txtUsername.getText();
+        String password = txtPassword.getText();
+        String confirmPassword = txtConfirmPassword.getText();
+
+        // Kiểm tra dữ liệu nhập vào
+        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            showAlert(AlertType.ERROR, "Lỗi", "Vui lòng điền đầy đủ thông tin.");
+            return;
+        }
+
+        if (password.length() < 6) {
+            showAlert(AlertType.ERROR, "Lỗi", "Mật khẩu cần ít nhất 6 kí tự!");
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            showAlert(AlertType.ERROR, "Lỗi", "Mật khẩu không khớp.");
+            return;
+        }
+
+        // Kiểm tra username đã tồn tại
+        if (userDAO.checkUsernameExists(username)) {
+            showAlert(AlertType.ERROR, "Lỗi", "Username này đã tồn tại! Vui lòng đặt tên khác.");
+            return;
+        }
+
+        // Thêm người dùng mới
+        User newUser = new User(username, password);
+        int result = userDAO.insert(newUser);
+
+        if (result > 0) {
+            showAlert(AlertType.INFORMATION, "Thành công", "Đăng ký thành công! Vui lòng đăng nhập.");
+            handleLogin(); // Điều hướng về trang Đăng nhập
+        } else {
+            showAlert(AlertType.ERROR, "Lỗi", "Đăng ký không thành công. Vui lòng thử lại.");
+        }
+    }
+
+    // Phương thức điều hướng về trang Đăng nhập
+    @FXML
+    private void handleLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/interface.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnLogin.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Đăng nhập");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}

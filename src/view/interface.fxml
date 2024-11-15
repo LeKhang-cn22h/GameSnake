@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -15,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
    <children>
       <BorderPane layoutX="-8.0" prefHeight="500.0" prefWidth="900.0">
          <left>
@@ -30,19 +25,38 @@
             </AnchorPane>
          </left>
          <right>
-            <AnchorPane prefHeight="500.0" prefWidth="350.0" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="511.0" prefWidth="387.0" style="-fx-background-color: #FFFFCC;" BorderPane.alignment="CENTER">
                <children>
-                  <TextField fx:id="txtUsername" layoutX="101.0" layoutY="198.0" promptText="Tên người dùng" style="-fx-background-color: transparent; -fx-border-color: #0099FF; -fx-border-width: 0px 0px 2px 0px;" />
-                  <PasswordField fx:id="txtPassword" layoutX="101.0" layoutY="282.0" promptText="Mật khẩu" style="-fx-background-color: transparent; -fx-border-color: #0099FF; -fx-border-width: 0px 0px 2px 0px;" />
-                  <Button fx:id="btnLogin" layoutX="70.0" layoutY="333.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="43.0" prefWidth="211.0" text="Đăng nhập" textFill="#b71f1f" />
-                  <Text fill="#0f68dc" layoutX="81.0" layoutY="144.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ĐĂNG NHẬP" textAlignment="CENTER">
+                  <TextField fx:id="txtUsername" layoutX="101.0" layoutY="198.0" style="-fx-background-color: #FFFFCC; -fx-border-color: #0099FF; -fx-border-width: 0px 0px 2px 0px;" />
+                  <PasswordField fx:id="txtPassword" layoutX="101.0" layoutY="282.0" style="-fx-background-color: transparent; -fx-border-color: #0099FF; -fx-border-width: 0px 0px 2px 0px;" />
+                  <Button fx:id="btnLogin" layoutX="70.0" layoutY="333.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="43.0" prefWidth="211.0" style="-fx-background-color: #CCFFCC;" text="Đăng nhập" textFill="#2f3130">
+                     <font>
+                        <Font size="13.0" />
+                     </font></Button>
+                  <Text fill="#1ba83c" layoutX="81.0" layoutY="144.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ĐĂNG NHẬP" textAlignment="CENTER">
                      <font>
                         <Font name="System Bold" size="31.0" />
                      </font>
                   </Text>
-                  <Button fx:id="btnRegister" layoutX="190.0" layoutY="395.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="38.0" prefWidth="90.0" text="Đăng ký" />
+                  <Button fx:id="btnRegister" layoutX="236.0" layoutY="399.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="38.0" prefWidth="90.0" style="-fx-background-color: #CCFFCC;" text="Đăng ký" textFill="#3a3838">
+                     <font>
+                        <Font size="13.0" />
+                     </font></Button>
                   <TextField fx:id="txtPassShow" layoutX="101.0" layoutY="282.0" promptText="Mật khẩu" style="-fx-background-color: transparent; -fx-border-color: #0099FF; -fx-border-width: 0px 0px 2px 0px;" visible="false" />
-                  <Button fx:id="btnShowHide" layoutX="288.0" layoutY="283.0" mnemonicParsing="false" onAction="#handleShowHide" prefHeight="29.0" prefWidth="36.0" text="S" />
+                  <Button fx:id="btnShowHide" layoutX="288.0" layoutY="283.0" mnemonicParsing="false" onAction="#handleShowHide" prefHeight="29.0" prefWidth="74.0" style="-fx-background-color: #CCFFCC;" text="Show" textFill="#383636">
+                     <font>
+                        <Font size="13.0" />
+                     </font></Button>
+                  <Text fill="#312f2f" layoutX="101.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="ba" text="Tên người dùng">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Text>
+                  <Text fill="#454343" layoutX="101.0" layoutY="279.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mật khẩu">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Text>
                </children>
             </AnchorPane>
          </right>

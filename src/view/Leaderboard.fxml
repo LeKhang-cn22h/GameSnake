@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RankingController">
+   <children>
+      <VBox layoutX="4.0" layoutY="3.0" prefHeight="301.0" prefWidth="700.0" style="-fx-background-color: #FFFFCC;">
+         <children>
+            <Button fx:id="btnBack" mnemonicParsing="false" onAction="#proceedToGame" style="-fx-background-color: #FFFFCC;" styleClass="-fx-background-radius" text="Quay lại" />
+            <TableView fx:id="tableView" prefHeight="271.0" prefWidth="700.0">
+              <columns>
+                <TableColumn fx:id="rankColumn" prefWidth="75.0" style="-fx-background-color: #CCFFCC;" text="Hạng" />
+                <TableColumn fx:id="usernameColumn" prefWidth="224.0" style="-fx-background-color: #CCFFFF;" text="Người chơi" />
+                <TableColumn fx:id="scoreColumn" prefWidth="220.0" style="-fx-background-color: #CCFFCC;" text="Điểm" />
+                <TableColumn fx:id="dateColumn" prefWidth="177.99993896484375" style="-fx-background-color: #CCFFFF;" text="Ngày" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
