@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.*;
 
@@ -213,14 +214,33 @@ public class GameViewController {
         }
 
         // Điều kiện thắng: ví dụ đạt 100 điểm
-        if (score.getCurrentScore() > 100000) {
-            endGame("Congratulations! You win!");
+        if (score.getCurrentScore() == 10) {
+            pauseGame();
+            startQuiz();
+            resumeGame();
+        }}
+
+    
+    private void startQuiz() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/QuizView.fxml"));
+        try {
+            Parent quizRoot = loader.load();
+            QuestionController questionController = loader.getController();
+            questionController.setGameViewController(this); // Truyền GameViewController vào QuestionController
+
+            // Thiết lập giao diện dưới dạng modal
+            Stage quizStage = new Stage();
+            quizStage.setTitle("Câu hỏi");
+            quizStage.initOwner(gameGrid.getScene().getWindow());
+            quizStage.initModality(Modality.APPLICATION_MODAL);
+            quizStage.setScene(new Scene(quizRoot));
+            quizStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
-        
     }
 
-    private void spawnFood() {
+	private void spawnFood() {
     	int row;
     	int col;
     	do {
@@ -243,6 +263,8 @@ public class GameViewController {
             scoreLabel.setText("Score: " + score.getCurrentScore());
         });
     }
+
+
     @FXML
 //kết thúc trò chơi bàn phím tắt
     private void end() {
@@ -267,6 +289,7 @@ public class GameViewController {
         int diem=score.getCurrentScore();
         new ScoreDAO().saveScore(diem, username);
         // Hiển thị thông báo kết thúc game
+        
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Kết thúc trò chơi");
         alert.setHeaderText(message);
@@ -313,6 +336,14 @@ public class GameViewController {
                 e.printStackTrace();
             }
         }
+    }
+    public void updateScoreFromQuiz(int points) {
+        // Cộng dồn điểm từ quiz vào điểm hiện tại
+        int currentScore = score.getCurrentScore();
+        score.setCurrentScore(currentScore + points);
+        
+        // Cập nhật hiển thị điểm số
+        updateScoreDisplay();
     }
 
 }

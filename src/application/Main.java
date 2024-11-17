@@ -1,37 +1,11 @@
-//package application;
-//
-//import javafx.application.Application;
-//import javafx.stage.Stage;
-//import javafx.scene.Scene;
-//import javafx.fxml.FXMLLoader;
-//import javafx.scene.Parent;
-//
-//public class Main extends Application {
-//    @Override
-//    public void start(Stage primaryStage) {
-//        try {
-//            Parent root = FXMLLoader.load(getClass().getResource("/view/GameView.fxml"));
-//            Scene scene = new Scene(root);
-//            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-//
-//            primaryStage.setScene(scene);
-//            primaryStage.setTitle("Grid Button Game");
-//            primaryStage.show();
-//            // Đặt focus vào root để nhận sự kiện bàn phím
-//            root.requestFocus();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
-//}
+
 package application;
 
 import java.io.File;
 
+import java.net.http.HttpClient;
+
+import java.net.URI;
 import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -41,6 +15,10 @@ import javafx.scene.Scene;
 //import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
 
 public class Main extends Application {
 
@@ -78,7 +56,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        DatabaseConnection.closeConnection();
-
+        HttpClient client = HttpClient.newHttpClient();
+        System.out.println("HttpClient is available and ready to use!");
     }
 }
