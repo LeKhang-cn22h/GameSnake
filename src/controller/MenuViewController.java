@@ -19,7 +19,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 public class MenuViewController {
 
 
@@ -27,7 +28,8 @@ public class MenuViewController {
     private Label playerLabel;
     @FXML
     private Button startButton;
- 
+    private MediaPlayer mediaPlayer;
+    private MediaPlayer menuMediaPlayer;
 
     // Phương thức đọc tên người dùng từ file
     private String readUsernameFromFile() {
@@ -43,15 +45,55 @@ public class MenuViewController {
         return username;
     }
 
-    
-    @FXML
-    private void initialize() {
-        String username = readUsernameFromFile();
-        playerLabel.setText( username); // Cập nhật tên người dùng vào Label
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.menuMediaPlayer = mediaPlayer;
+    }
+
+    // Phương thức để phát nhạc menu
+    public void playMenuMusic() {
+        if (menuMediaPlayer != null) {
+            menuMediaPlayer.play();
+        }
     }
 
     @FXML
+    private void initialize() {
+        String username = readUsernameFromFile();
+        playerLabel.setText(username); // Cập nhật tên người dùng vào Label
+        
+        // Khởi tạo Media và MediaPlayer
+        // Chú ý: Đảm bảo đường dẫn đúng, sử dụng "toExternalForm()" để lấy đường dẫn đúng khi tải từ resources
+        Media media = new Media(getClass().getResource("/view/image_codinh/NhacNen.ogg").toExternalForm());
+
+        // Kiểm tra lỗi khi tải Media
+        if (media.getError() != null) {
+            System.out.println("Error loading media: " + media.getError().getMessage());
+        }
+        
+        // Kiểm tra xem MediaPlayer có được khởi tạo thành công không
+        if (media.getError() == null) {
+            mediaPlayer = new MediaPlayer(media);
+            
+            // Đảm bảo MediaPlayer đã được khởi tạo
+            if (mediaPlayer != null) {
+                mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Phát nhạc liên tục
+                mediaPlayer.setVolume(1.0); // Đảm bảo âm lượng tối đa
+                mediaPlayer.setOnError(() -> {
+                    System.out.println("Error in MediaPlayer: " + mediaPlayer.getError().getMessage());
+                });
+                mediaPlayer.play(); // Bắt đầu phát nhạc
+            } else {
+                System.out.println("Failed to initialize MediaPlayer.");
+            }
+        } else {
+            System.out.println("Error: Media file could not be loaded.");
+        }
+    }
+
+
+    @FXML
     private void logout(ActionEvent event) {
+    	mediaPlayer.stop(); 
         Alert logoutAlert = new Alert(AlertType.CONFIRMATION);
         logoutAlert.setTitle("Thông báo");
         logoutAlert.setContentText("Bạn có chắc chắn muốn đăng xuất!");
@@ -78,18 +120,23 @@ public class MenuViewController {
     }
 
     // Phương thức chuyển về giao diện interface.fxml
+    @FXML
     private void switchToInterface(ActionEvent event) {
         try {
+            // Chuyển về giao diện menu (interface.fxml)
             Parent root = FXMLLoader.load(getClass().getResource("/view/interface.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
+
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     @FXML
     private void openGameView(ActionEvent event) {
+        mediaPlayer.stop(); // Dừng nhạc nền khi bắt đầu game
         try {
             // Tải FXML cho GameView
             Parent gameViewRoot = FXMLLoader.load(getClass().getResource("/view/GameView.fxml"));
@@ -105,7 +152,9 @@ public class MenuViewController {
    
 
     @FXML
+   
     private void openRankingView(ActionEvent event) {
+    	 mediaPlayer.stop();
         try {
             // Tải FXML cho bảng xếp hạng
             Parent rankingViewRoot = FXMLLoader.load(getClass().getResource("/view/Leaderboard.fxml"));
@@ -114,10 +163,15 @@ public class MenuViewController {
             // Đặt giao diện mới cho Stage
             stage.setScene(new Scene(rankingViewRoot));
             stage.show();
+
+            // Tiếp tục phát nhạc nếu nó không đang phát
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
+
     @FXML
     private void showHelpDialog(ActionEvent event) {
         Alert helpAlert = new Alert(AlertType.NONE);
