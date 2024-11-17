@@ -57,5 +57,9 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
+=======
+	<classpathentry kind="lib" path="C:/Users/Thanh Dat/Downloads/mysql-connector-j-9.0.0/mysql-connector-j-9.0.0/mysql-connector-j-9.0.0.jar"/>
+>>>>>>> 088041c04172db935a172c256360037b986f0a5a
 	<classpathentry kind="output" path="bin"/>
 </classpath>

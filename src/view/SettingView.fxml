@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SettingController">
+   <children>
+      <Pane layoutY="-7.0" prefHeight="236.0" prefWidth="252.0">
+         <children>
+          <AnchorPane layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="229.0" prefWidth="252.0">
+               <children>
+                  <Label fx:id="labTitle" layoutX="98.0" layoutY="41.0" text="Đổi màu" />
+                  <Button fx:id="btnColorSnake" layoutX="91.0" layoutY="84.0" mnemonicParsing="false" onAction="#openColorBoard" prefHeight="31.0" prefWidth="71.0" text="Rắn" />
+               </children>
+            </AnchorPane>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
