@@ -16,6 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -190,4 +191,22 @@ public class MenuViewController {
 
         helpAlert.showAndWait();
     }
+    @FXML
+    private void openSetting() {
+        try {
+            // Tải fxml cho SettingController
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SettingView.fxml"));
+            Parent root = loader.load();
+            // Tạo một cửa sổ mới
+            Stage newStage = new Stage();
+            newStage.setTitle("Cài đặt");
+            newStage.initModality(Modality.WINDOW_MODAL);
+            newStage.initOwner(playerLabel.getScene().getWindow());
+            newStage.setScene(new Scene(root));
+            newStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -31,6 +31,7 @@ import DAO.ScoreDAO;
 
 public class GameViewController {
 	
+	private String colorSnake;
     @FXML
     private GridPane gameGrid;
     private Snake snake;
@@ -51,6 +52,7 @@ public class GameViewController {
 
     @FXML
     public void initialize() {
+    	colorSnake = SharedData.getSelectedColor();
     	isGameOver = false;
     	gameGrid.getChildren().clear();
         gameConfig = new GameConfig(20, 30, 30);
@@ -110,7 +112,7 @@ public class GameViewController {
 
         for (Position position : snake.getBody()) {
             Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
-            button.setStyle("-fx-background-color: yellow;");
+            button.setStyle("-fx-background-color: "+ colorSnake +";");
         }
         drawFood();
     }

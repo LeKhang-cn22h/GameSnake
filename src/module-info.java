@@ -4,6 +4,8 @@ module game {
     requires javafx.media;
     requires java.sql;
     requires java.base;
+	requires javafx.graphics;
+
     requires java.desktop;
 
     // Mở package 'application' để JavaFX có thể truy cập vào các class trong đó (như Main.java, các controller và view)
