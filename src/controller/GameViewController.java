@@ -23,6 +23,10 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
 
+import java.net.URL;
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import DAO.ScoreDAO;
 
 public class GameViewController {
@@ -157,19 +161,18 @@ public class GameViewController {
     private void startGameThread() {
         gameThread = new Thread(() -> {
             while (!isGameOver) {
-            	if (!isPaused) {
-                Platform.runLater(() -> {
-                	snake.move();
-                	checkCollision();
-                    drawSnake();
-                });
-            	}
+                if (!isPaused) {
+                    Platform.runLater(() -> {
+                        snake.move();
+                        checkCollision();  // Check collisions only if the game isn't over
+                        drawSnake();
+                    });
+                }
                 try {
-                    Thread.sleep(200);  // Rắn di chuyển mỗi 500ms
+                    Thread.sleep(200);  // Delay for snake movement
                 } catch (InterruptedException e) {
-//                    e.printStackTrace();
-                	Thread.currentThread().interrupt(); // Xử lý khi bị ngắt
-                    System.out.println("Luồng bị ngắt!");
+                    Thread.currentThread().interrupt();  // Handle thread interruption
+                    System.out.println("Game thread interrupted!");
                 }
             }
         });
@@ -186,22 +189,24 @@ public class GameViewController {
         isPaused = false;
         gameGrid.requestFocus();
     }
+    
     // Kiểm tra va chạm
     private void checkCollision() {
+        if (isGameOver) return;  // Skip collision checks if the game is already over
+        
         Position head = snake.getHead();
 
-        // Kiểm tra va chạm với tường
-        if (head.getRow() < 0 || 
-        		head.getRow() >= gameConfig.getMapSize() || 
-        		head.getCol() < 0 || 
-        		head.getCol() >= gameConfig.getMapSize()) {
-            endGame("Game Over: You hit the wall!");
+        // Check collision with walls
+        if (head.getRow() < 0 || head.getRow() >= gameConfig.getMapSize() || head.getCol() < 0 || head.getCol() >= gameConfig.getMapSize()) {
+            playGameOverSound();  // Play game over sound
+            endGame("Game Over: You hit the wall!");  // End the game
         }
 
-        // Kiểm tra va chạm với chính rắn
+        // Check collision with itself (the body)
         for (int i = 1; i < snake.getBody().size(); i++) {
             if (head.equals(snake.getBody().get(i))) {
-                endGame("Game Over: You hit yourself!");
+                playGameOverSound();  // Play game over sound
+                endGame("Game Over: You hit yourself!");  // End the game
             }
         }
 
@@ -211,16 +216,41 @@ public class GameViewController {
             System.out.println("Score increased, current score: " + score.getCurrentScore());  // Kiểm tra ở đây
             spawnFood();
             updateScoreDisplay();
-            
+            playEatSound();  // Phát âm thanh khi ăn mồi
         }
 
         // Điều kiện thắng: ví dụ đạt 100 điểm
         if (score.getCurrentScore() > 100000) {
             endGame("Congratulations! You win!");
         }
-        
-        
     }
+    public void playGameOverSound() {
+        // Sử dụng getClass().getResource() để lấy đường dẫn hợp lệ
+        URL resource = getClass().getResource("/view/image_codinh/Chet.ogg");
+        
+        // Kiểm tra nếu resource là null
+        if (resource != null) {
+            Media media = new Media(resource.toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
+        } else {
+            System.out.println("File âm thanh không tìm thấy!");
+        }
+    }
+    private void playEatSound() {
+        // Lấy URL của file âm thanh
+        URL resource = getClass().getResource("/view/image_codinh/AnMoi.ogg");
+
+        // Kiểm tra nếu tài nguyên âm thanh tồn tại
+        if (resource != null) {
+            Media media = new Media(resource.toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play(); // Phát âm thanh
+        } else {
+            System.out.println("Không tìm thấy file âm thanh!");
+        }
+    }
+
 
     private void spawnFood() {
     	int row;
