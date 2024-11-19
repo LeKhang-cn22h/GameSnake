@@ -65,7 +65,6 @@ public class MenuViewController {
         // Khởi tạo Media và MediaPlayer
         // Chú ý: Đảm bảo đường dẫn đúng, sử dụng "toExternalForm()" để lấy đường dẫn đúng khi tải từ resources
         Media media = new Media(getClass().getResource("/view/image_codinh/NhacNen.ogg").toExternalForm());
-
         // Kiểm tra lỗi khi tải Media
         if (media.getError() != null) {
             System.out.println("Error loading media: " + media.getError().getMessage());

@@ -3,8 +3,11 @@ package controller;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -13,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.*;
@@ -33,8 +37,13 @@ import DAO.ScoreDAO;
 public class GameViewController {
 	
 	private String colorSnake;
+	private Image BgrMap;
+	@FXML
+	private StackPane stackP;
     @FXML
     private GridPane gameGrid;
+    @FXML
+    private ImageView imgGame;
     private Snake snake;
     private Food food;
     private GameConfig gameConfig;
@@ -54,16 +63,20 @@ public class GameViewController {
     @FXML
     public void initialize() {
     	colorSnake = SharedData.getSelectedColor();
+    	BgrMap = SharedData.getSelectedBgr();
     	isGameOver = false;
     	gameGrid.getChildren().clear();
         gameConfig = new GameConfig(20, 30, 30);
+        stackP.setPrefWidth(gameConfig.getButtonWidth()*gameConfig.getMapSize());
+        stackP.setPrefHeight(gameConfig.getButtonHeight()*gameConfig.getMapSize());
+        stackP.setFocusTraversable(false);
         food = new Food(5, 5);
         snake = new Snake(10, 10, food, gameConfig);
         random = new Random();
         score = new Score(0);
         updateScoreDisplay();
-        
         createGameGrid();
+        setImgGame();
         drawSnake();
         String username = readUsernameFromFile();
         userTxt.setText( username); 
@@ -92,23 +105,42 @@ public class GameViewController {
             for (int col = 0; col < gameConfig.getMapSize(); col++) {
                 Button button = new Button();
                 button.setPrefSize(gameConfig.getButtonWidth(), gameConfig.getButtonHeight());
-                button.setStyle("-fx-background-color: white;");
+                button.setStyle("-fx-background-color: transparent;");
                 button.setFocusTraversable(false);
-
                 gameGrid.add(button, col, row);
             }
         }
-        
         System.out.println("Tạo bàn cờ");
     }
+    
+
+
+	private void setImgGame() {
+	    // Tạo ImageView nếu chưa có
+	if (imgGame == null) {
+	    imgGame = new ImageView();
+	}
+	
+	// Đặt hình ảnh cho ImageView
+	imgGame.setImage(BgrMap);
+	
+	// Điều chỉnh kích thước ImageView (nếu cần)
+	imgGame.setFitWidth(gameConfig.getButtonWidth()*gameConfig.getMapSize()-16); // Chiều rộng
+	imgGame.setFitHeight(gameConfig.getButtonHeight()*gameConfig.getMapSize()-16); // Chiều cao
+	imgGame.setPreserveRatio(false);
+    // Thêm các thành phần vào StackPane
+    // Căn chỉnh các thành phần (nếu cần)
+    StackPane.setAlignment(imgGame, Pos.CENTER); // Hình nền căn giữa
+    StackPane.setAlignment(gameGrid, Pos.CENTER); // Bàn cờ căn giữa
+	}
 
     private void drawSnake() {
         for (int row = 0; row < gameConfig.getMapSize(); row++) {
             for (int col = 0; col < gameConfig.getMapSize(); col++) {
                 Button button = (Button) gameGrid.getChildren().get(row * gameConfig.getMapSize() + col);
-                button.setStyle("-fx-background-color: white;");
+                button.setStyle("-fx-background-color: transparent;");
+                button.setFocusTraversable(false);
             }
-
         }
 
         for (Position position : snake.getBody()) {
