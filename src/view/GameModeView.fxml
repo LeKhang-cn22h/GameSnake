@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ModeViewController">
+   <children>
+      <Pane prefHeight="500.0" prefWidth="700.0">
+         <children>
+            <VBox layoutX="47.0" layoutY="39.0" prefHeight="166.0" prefWidth="215.0">
+               <children>
+                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="btnMode1" mnemonicParsing="false" onAction="#getmodeGame" prefHeight="53.0" prefWidth="215.0" text="Cổ Điển" />
+               </children>
+            </VBox>
+            <VBox layoutX="423.0" layoutY="39.0" prefHeight="166.0" prefWidth="215.0">
+               <children>
+                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="btnMode2" mnemonicParsing="false" onAction="#getmodeGame" prefHeight="53.0" prefWidth="215.0" text="Tự Do" />
+               </children>
+            </VBox>
+            <VBox layoutX="47.0" layoutY="303.0" prefHeight="166.0" prefWidth="215.0">
+               <children>
+                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@image_codinh/bg1.png" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="btnMode3" mnemonicParsing="false" onAction="#getmodeGame" prefHeight="53.0" prefWidth="215.0" text="Chướng ngại" />
+               </children>
+            </VBox>
+            <VBox layoutX="423.0" layoutY="309.0" prefHeight="166.0" prefWidth="215.0">
+               <children>
+                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@image_codinh/test.jpg" />
+                     </image>
+                  </ImageView>
+                  <Button fx:id="btnMode4" mnemonicParsing="false" onAction="#getmodeGame" prefHeight="53.0" prefWidth="215.0" text="Thách thức" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

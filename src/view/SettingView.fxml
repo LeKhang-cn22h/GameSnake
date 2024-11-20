@@ -13,6 +13,7 @@
                <children>
                   <Label fx:id="labTitle" layoutX="98.0" layoutY="41.0" text="Đổi màu" />
                   <Button fx:id="btnColorSnake" layoutX="91.0" layoutY="84.0" mnemonicParsing="false" onAction="#openColorBoard" prefHeight="31.0" prefWidth="71.0" text="Rắn" />
+                  <Button fx:id="btnBgrMap" layoutX="91.0" layoutY="136.0" mnemonicParsing="false" onAction="#openBgrBoard" prefHeight="31.0" prefWidth="71.0" text="Map" />
                </children>
             </AnchorPane>
          </children>
