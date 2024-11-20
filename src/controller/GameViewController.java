@@ -25,6 +25,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -35,9 +37,10 @@ import javafx.scene.media.MediaPlayer;
 import DAO.ScoreDAO;
 
 public class GameViewController {
-	
+	private List<Position> ob =  Arrays.asList(new Position(3, 15),new Position(19, 5),new Position(7, 9),new Position(1, 13),new Position(10, 6),new Position(4, 18),new Position(2, 2),new Position(8, 14),new Position(11, 11),new Position(16, 7));
 	private String colorSnake;
 	private Image BgrMap;
+	private int modeGame;
 	@FXML
 	private StackPane stackP;
     @FXML
@@ -62,6 +65,7 @@ public class GameViewController {
 
     @FXML
     public void initialize() {
+    	modeGame = SharedData.getSelectedMode();
     	colorSnake = SharedData.getSelectedColor();
     	BgrMap = SharedData.getSelectedBgr();
     	isGameOver = false;
@@ -110,10 +114,16 @@ public class GameViewController {
                 gameGrid.add(button, col, row);
             }
         }
+        
         System.out.println("Tạo bàn cờ");
     }
     
-
+    private void addOb() {
+        for (Position position : ob) {
+            Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
+            button.setStyle("-fx-background-color: red;");
+        }
+    }
 
 	private void setImgGame() {
 	    // Tạo ImageView nếu chưa có
@@ -140,6 +150,10 @@ public class GameViewController {
                 Button button = (Button) gameGrid.getChildren().get(row * gameConfig.getMapSize() + col);
                 button.setStyle("-fx-background-color: transparent;");
                 button.setFocusTraversable(false);
+                if (modeGame == 2) {
+                	addOb();
+                }
+                
             }
         }
 
@@ -230,7 +244,7 @@ public class GameViewController {
         Position head = snake.getHead();
 
         // Check collision with walls
-        if (head.getRow() < 0 || head.getRow() >= gameConfig.getMapSize() || head.getCol() < 0 || head.getCol() >= gameConfig.getMapSize()) {
+        if (head.getRow() < 0 || head.getRow() >= gameConfig.getMapSize() || head.getCol() < 0 || head.getCol() >= gameConfig.getMapSize() || ob.contains(head)) {
             playGameOverSound();  // Play game over sound
             endGame("Game Over: You hit the wall!");  // End the game
         }
@@ -317,16 +331,12 @@ public class GameViewController {
     	food.setPosition(new Position(row, col));
     	}
     private boolean isFoodOnSnake(Position foodPosition) {
-      for (Position position : snake.getBody()) {
-          if (position.equals(foodPosition)) {
-              return true;
-          }
-      }
-      return false;
+      return ob.contains(foodPosition)||snake.getBody().contains(foodPosition);
   }
     private void updateScoreDisplay() {
         Platform.runLater(() -> {
             scoreLabel.setText("Score: " + score.getCurrentScore());
+            
         });
     }
 

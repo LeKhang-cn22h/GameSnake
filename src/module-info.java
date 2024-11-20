@@ -8,6 +8,7 @@ module game {
     requires org.json;
 	requires javafx.graphics;
     requires java.desktop;
+	requires javafx.base;
 
     // Mở package 'application' để JavaFX có thể truy cập vào các class trong đó (như Main.java, các controller và view)
     opens application to javafx.graphics, javafx.fxml,org.json;

@@ -139,7 +139,7 @@ public class MenuViewController {
         mediaPlayer.stop(); // Dừng nhạc nền khi bắt đầu game
         try {
             // Tải FXML cho GameView
-            Parent gameViewRoot = FXMLLoader.load(getClass().getResource("/view/GameView.fxml"));
+            Parent gameViewRoot = FXMLLoader.load(getClass().getResource("/view/GameModeView.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             // Đặt giao diện mới cho Stage
