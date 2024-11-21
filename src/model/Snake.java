@@ -80,46 +80,7 @@ public class Snake {
         return new Position(newRow, newCol);  // Trả về vị trí mới của đầu rắn
     }
 
-    // Phương thức tạo vị trí ngẫu nhiên cho thức ăn
-//    private Position generateRandomFoodPosition() {
-//        int mapSize = gameConfig.getMapSize();
-//        int row = random.nextInt(mapSize);  // Random hàng
-//        int col = random.nextInt(mapSize);  // Random cột
-//
-////        // Đảm bảo thức ăn không xuất hiện ở vị trí của rắn
-//        while (isFoodOnSnake(new Position(row, col))) {
-//            row = random.nextInt(mapSize);
-//            col = random.nextInt(mapSize);
-////        }
-//        return new Position(row, col);  // Trả về vị trí mới của thức ăn
-//    }
-
-    // Kiểm tra nếu thức ăn trùng với vị trí của rắn
-//    private boolean isFoodOnSnake(Position foodPosition) {
-//        for (Position position : body) {
-//            if (position.equals(foodPosition)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//    private Position generateRandomFoodPosition() {
-//  int mapSize = gameConfig.getMapSize();
-//  int row;
-//  int col;
-//    do {
-//    	row = random.nextInt(mapSize);  // Random hàng
-//       col = random.nextInt(mapSize);  // Random cột
-//    }while (isFoodOnSnake(new Position(row, col))) ;
-//    	return new Position(row, col);}
-//    private boolean isFoodOnSnake(Position foodPosition) {
-//      for (Position position : body) {
-//          if (position.equals(foodPosition)) {
-//              return true;
-//          }
-//      }
-//      return false;
-//  }
+   
 
     
 }

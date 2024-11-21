@@ -62,9 +62,12 @@ public class GameViewController {
     private boolean isPaused = false;
     @FXML
     private MenuButton menuButton;
+    private GameState gameState;
 
     @FXML
     public void initialize() {
+        this.gameState = new GameState(200); // 200ms là tốc độ mặc định
+
     	modeGame = SharedData.getSelectedMode();
     	colorSnake = SharedData.getSelectedColor();
     	BgrMap = SharedData.getSelectedBgr();
@@ -74,7 +77,9 @@ public class GameViewController {
         stackP.setPrefWidth(gameConfig.getButtonWidth()*gameConfig.getMapSize());
         stackP.setPrefHeight(gameConfig.getButtonHeight()*gameConfig.getMapSize());
         stackP.setFocusTraversable(false);
-        food = new Food(5, 5, FoodType.NORMAL);
+     // Random vị trí mới cho food
+        Position randomPos = randomPosition();
+        food = new Food(randomPos.getCol(), randomPos.getRow(), FoodType.NORMAL);
         snake = new Snake(10, 10, food, gameConfig);
         random = new Random();
         score = new Score(0);
@@ -104,7 +109,15 @@ public class GameViewController {
         startGameThread();
     }
 
-    private void createGameGrid() {
+    public Position randomPosition() {
+        Random random = new Random();
+        int x = random.nextInt(gameConfig.getMapSize()); // MAP_WIDTH là chiều rộng của map
+        int y = random.nextInt(gameConfig.getMapSize()); // MAP_HEIGHT là chiều cao của map
+        return new Position(x, y);
+    }
+
+
+	private void createGameGrid() {
         for (int row = 0; row < gameConfig.getMapSize(); row++) {
             for (int col = 0; col < gameConfig.getMapSize(); col++) {
                 Button button = new Button();
@@ -227,12 +240,12 @@ public class GameViewController {
                 if (!isPaused) {
                     Platform.runLater(() -> {
                         snake.move();
-                        checkCollision();  // Check collisions only if the game isn't over
+                        checkCollision();  
                         drawSnake();
                     });
                 }
                 try {
-                    Thread.sleep(200);  // Delay for snake movement
+                    Thread.sleep(gameState.getSnakeSpeed());  // Delay for snake movement
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();  // Handle thread interruption
                     System.out.println("Game thread interrupted!");
@@ -277,25 +290,29 @@ public class GameViewController {
         if (head.equals(food.getPosition())) {
             score.increaseScore(10);
             System.out.println("Score increased, current score: " + score.getCurrentScore());  // Kiểm tra ở đây
+            if (modeGame == 3 || modeGame == 4) {
+            	if(food.getType().getEffect() instanceof QuizFoodEffect) {
+            		isPaused=true;
+            	    ((QuizFoodEffect) food.getType().getEffect()).setGameViewController(this);
+            	    
+            	}
+            	food.getType().getEffect().applyEffect(snake, gameConfig,gameState);
             spawnFood();
             updateScoreDisplay();
             playEatSound();  // Phát âm thanh khi ăn mồi
-        }
-
-        // Điều kiện thắng: ví dụ đạt 100 điểm
-        if (score.getCurrentScore() == 10) {
-            pauseGame();
-            startQuiz();
-            resumeGame();
         }}
 
-    
-    private void startQuiz() {
+     }
+
+
+
+    public void startQuiz() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/QuizView.fxml"));
         try {
             Parent quizRoot = loader.load();
             QuestionController questionController = loader.getController();
             questionController.setGameViewController(this); // Truyền GameViewController vào QuestionController
+       
 
             // Thiết lập giao diện dưới dạng modal
             Stage quizStage = new Stage();
@@ -304,6 +321,7 @@ public class GameViewController {
             quizStage.initModality(Modality.APPLICATION_MODAL);
             quizStage.setScene(new Scene(quizRoot));
             quizStage.showAndWait();
+            isPaused=false;
         } catch (IOException e) {
             e.printStackTrace();
         }
