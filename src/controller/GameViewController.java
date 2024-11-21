@@ -74,7 +74,7 @@ public class GameViewController {
         stackP.setPrefWidth(gameConfig.getButtonWidth()*gameConfig.getMapSize());
         stackP.setPrefHeight(gameConfig.getButtonHeight()*gameConfig.getMapSize());
         stackP.setFocusTraversable(false);
-        food = new Food(5, 5);
+        food = new Food(5, 5, FoodType.NORMAL);
         snake = new Snake(10, 10, food, gameConfig);
         random = new Random();
         score = new Score(0);
@@ -150,10 +150,10 @@ public class GameViewController {
                 Button button = (Button) gameGrid.getChildren().get(row * gameConfig.getMapSize() + col);
                 button.setStyle("-fx-background-color: transparent;");
                 button.setFocusTraversable(false);
-                if (modeGame == 2) {
-                	addOb();
-                }
-                
+               if (modeGame==3 || modeGame==4) {
+            	   addOb();
+               }
+              
             }
         }
 
@@ -164,20 +164,36 @@ public class GameViewController {
         drawFood();
     }
 
-    private void drawFood() {
-        // Sử dụng getResource() để lấy đường dẫn ảnh chính xác
-        String imageUrl = getClass().getResource("/view/image_codinh/dua_hau.png").toExternalForm();
 
-        // Đặt style cho Button để hiển thị ảnh
+    private void drawFood() {
+        String imageUrl;
+        switch (food.getType()) {
+            case NORMAL:
+                imageUrl = getClass().getResource("/view/image_codinh/dua_hau.png").toExternalForm();
+                break;
+            case SLOW:
+                imageUrl = getClass().getResource("/view/image_codinh/dautay.jpg").toExternalForm();
+                break;
+            case SPEED:
+                imageUrl = getClass().getResource("/view/image_codinh/traitao.jpg").toExternalForm();
+                break;
+            case QUIZZ:
+                imageUrl = getClass().getResource("/view/image_codinh/traitim.jpg").toExternalForm();
+                break;
+            default:
+                imageUrl = getClass().getResource("/view/image_codinh/default_food.png").toExternalForm();
+        }
+
         Button foodButton = (Button) gameGrid.getChildren().get(
             food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
-        
+
         foodButton.setStyle("-fx-background-image: url('" + imageUrl + "'); " +
                             "-fx-background-size: 33px 33px; " +
                             "-fx-background-repeat: no-repeat; " +
-                            "-fx-background-color: transparent;"+
+                            "-fx-background-color: transparent; " +
                             "-fx-background-position: center;");
     }
+
 
 
     @FXML
@@ -244,7 +260,7 @@ public class GameViewController {
         Position head = snake.getHead();
 
         // Check collision with walls
-        if (head.getRow() < 0 || head.getRow() >= gameConfig.getMapSize() || head.getCol() < 0 || head.getCol() >= gameConfig.getMapSize() || ob.contains(head)) {
+        if (head.getRow() < 0 || head.getRow() >= gameConfig.getMapSize() || head.getCol() < 0 || head.getCol() >= gameConfig.getMapSize() || (modeGame == 3 || modeGame == 4) && ob.contains(head)) {
             playGameOverSound();  // Play game over sound
             endGame("Game Over: You hit the wall!");  // End the game
         }
@@ -320,16 +336,21 @@ public class GameViewController {
     }
 
 
-	private void spawnFood() {
-    	int row;
-    	int col;
-    	do {
-         row = random.nextInt(gameConfig.getMapSize());
-        col = random.nextInt(gameConfig.getMapSize());
-        
-    }while (isFoodOnSnake(new Position(row, col)));
-    	food.setPosition(new Position(row, col));
-    	}
+    private void spawnFood() {
+        int row, col;
+        do {
+            row = random.nextInt(gameConfig.getMapSize());
+            col = random.nextInt(gameConfig.getMapSize());
+        } while (isFoodOnSnake(new Position(row, col)));
+
+        if (modeGame == 1 || modeGame == 2) {
+            food = FoodFactory.createNormalFood(row, col);
+        } else if (modeGame == 3 || modeGame == 4) {
+            food = FoodFactory.createRandomFood(row, col);
+        }
+    }
+
+	
     private boolean isFoodOnSnake(Position foodPosition) {
       return ob.contains(foodPosition)||snake.getBody().contains(foodPosition);
   }

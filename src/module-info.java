@@ -1,11 +1,10 @@
-module game {
+module GameSnake {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
     requires java.sql;
     requires java.base;
     requires java.net.http;
-    requires org.json;
 	requires javafx.graphics;
     requires java.desktop;
 	requires javafx.base;
