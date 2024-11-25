@@ -74,7 +74,6 @@ public class QuestionController {
         stage.close(); // Đóng cửa sổ
     }
 
-    @FXML
     public void handleAnswer(int selectedOption) {
         Question question = questions.get(currentQuestionIndex);
         

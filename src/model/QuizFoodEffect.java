@@ -21,7 +21,6 @@ public class QuizFoodEffect implements FoodEffect {
     @Override
     public void applyEffect(Snake snake, GameConfig gameConfig, GameState gameState) {
         System.out.println("Quiz food eaten. Triggering quiz challenge.");
-        snake.grow();
 
         if (gameViewController != null) {
             gameViewController.startQuiz();

@@ -1,4 +1,4 @@
-module GameSnake {
+module game {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
@@ -8,6 +8,7 @@ module GameSnake {
 	requires javafx.graphics;
     requires java.desktop;
 	requires javafx.base;
+	requires org.json;
 
     // Mở package 'application' để JavaFX có thể truy cập vào các class trong đó (như Main.java, các controller và view)
     opens application to javafx.graphics, javafx.fxml,org.json;
@@ -17,4 +18,5 @@ module GameSnake {
     opens view to javafx.graphics, javafx.fxml;
     opens controller to javafx.graphics, javafx.fxml;
     opens database to javafx.graphics, javafx.fxml;
+    opens DAO to org.json;
 }

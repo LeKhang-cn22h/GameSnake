@@ -15,10 +15,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.*;
 
 import java.io.BufferedReader;
@@ -34,13 +37,18 @@ import java.net.URL;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import DAO.APIClient;
 import DAO.ScoreDAO;
+import DAO.WeatherParser;
 
 public class GameViewController {
 	private List<Position> ob =  Arrays.asList(new Position(3, 15),new Position(19, 5),new Position(7, 9),new Position(1, 13),new Position(10, 6),new Position(4, 18),new Position(2, 2),new Position(8, 14),new Position(11, 11),new Position(16, 7));
 	private String colorSnake;
 	private Image BgrMap;
 	private int modeGame;
+	private Position newHead;
+	@FXML
+	private AnchorPane BoardMain;
 	@FXML
 	private StackPane stackP;
     @FXML
@@ -63,11 +71,17 @@ public class GameViewController {
     @FXML
     private MenuButton menuButton;
     private GameState gameState;
+    @FXML
+    private VBox MenuInfor;
+    @FXML
+    private ImageView imgWeather = new ImageView();
+    
 
     @FXML
     public void initialize() {
+    	APIWeatherTime();
         this.gameState = new GameState(200); // 200ms là tốc độ mặc định
-
+        newHead = new Position(10, 10);
     	modeGame = SharedData.getSelectedMode();
     	colorSnake = SharedData.getSelectedColor();
     	BgrMap = SharedData.getSelectedBgr();
@@ -78,10 +92,12 @@ public class GameViewController {
         stackP.setPrefHeight(gameConfig.getButtonHeight()*gameConfig.getMapSize());
         stackP.setFocusTraversable(false);
      // Random vị trí mới cho food
-        Position randomPos = randomPosition();
-        food = new Food(randomPos.getCol(), randomPos.getRow(), FoodType.NORMAL);
-        snake = new Snake(10, 10, food, gameConfig);
+//        Position randomPos = randomPosition();
+        
+//        food = new Food(randomPos.getCol(), randomPos.getRow(), FoodType.NORMAL);
+        snake = new Snake(10, 10, gameConfig);
         random = new Random();
+        spawnFood();
         score = new Score(0);
         updateScoreDisplay();
         createGameGrid();
@@ -107,6 +123,38 @@ public class GameViewController {
         });
         // Tạo và bắt đầu thread để tự động di chuyển rắn
         startGameThread();
+    }
+    
+    private void APIWeatherTime() {
+        try {
+            // Lấy dữ liệu thời tiết
+            String city = "Ho Chi Minh City"; // Thành phố
+            String weatherData = APIClient.getWeatherData(city);
+            // Phân tích dữ liệu
+            String weather = WeatherParser.parseWeather(weatherData);
+            int hour = WeatherParser.parseTime(weatherData);
+            // Khởi tạo GameEnvironment
+            GameEnvironment gameEnvironment = new GameEnvironment(weather, hour, this);
+
+            // Cập nhật môi trường game dựa trên thời tiết
+            gameEnvironment.updateGameBasedOnWeather();
+            System.out.println("chay xong");
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+    public void updateWeather(Image img) {
+        imgWeather.setImage(img);
+    }
+    public void updateDarkMode(String styleBoard, String styleMenu, String styleUser, String styleButton) {
+//    	BoardMain.setStyle("-fx-background-color: lightblue;");
+    	BoardMain.setStyle(styleBoard);
+    	MenuInfor.setStyle(styleMenu);
+    	userTxt.setStyle(styleUser);
+    	menuButton.setStyle(styleButton);
+    }
+    public void updateMenuInfor(Image img) {
+        imgWeather.setImage(img);
     }
 
     public Position randomPosition() {
@@ -169,12 +217,28 @@ public class GameViewController {
               
             }
         }
-
+        
         for (Position position : snake.getBody()) {
             Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
-            button.setStyle("-fx-background-color: "+ colorSnake +";");
+        	if (position == snake.getHead()) {
+//        		if(modeGame!=2) {
+//	    			if(position.getCol()>=0 || position.getCol()<gameConfig.getMapSize() || position.getRow()>=0 || position.getRow()<gameConfig.getMapSize()) {
+//		        		button.setStyle("-fx-background-image:url('/view/image_codinh/dua_hau.png');"
+//		        				+ "-fx-background-size:cover;"
+//		        				+ "-fx-background-repeat:no-repeat;");
+//		        		}
+//	    			}		
+//    			else {
+        		button.setStyle("-fx-background-image:url('/view/image_codinh/dua_hau.png');"
+        				+ "-fx-background-size:cover;"
+        				+ "-fx-background-repeat:no-repeat;");
+//        		}
+        	}else {
+                button.setStyle("-fx-background-color: "+ colorSnake +";");
+        	}
+
         }
-        drawFood();
+        
     }
 
 
@@ -239,9 +303,12 @@ public class GameViewController {
             while (!isGameOver) {
                 if (!isPaused) {
                     Platform.runLater(() -> {
-                        snake.move();
-                        checkCollision();  
+                    	newHead = snake.calculateNewHeadPosition(modeGame);  // Tính toán vị trí mới của đầu rắn
+//                    	APIWeatherTime();
+                        checkCollision();
+                        snake.move(newHead);
                         drawSnake();
+                        drawFood();
                     });
                 }
                 try {
@@ -270,14 +337,14 @@ public class GameViewController {
     private void checkCollision() {
         if (isGameOver) return;  // Skip collision checks if the game is already over
         
-        Position head = snake.getHead();
-
-        // Check collision with walls
-        if (head.getRow() < 0 || head.getRow() >= gameConfig.getMapSize() || head.getCol() < 0 || head.getCol() >= gameConfig.getMapSize() || (modeGame == 3 || modeGame == 4) && ob.contains(head)) {
-            playGameOverSound();  // Play game over sound
-            endGame("Game Over: You hit the wall!");  // End the game
+        Position head = newHead;
+        if(modeGame != 2) {
+	        // Check collision with walls
+	        if (head.getRow() < 0 || head.getRow() >= gameConfig.getMapSize() || head.getCol() < 0 || head.getCol() >= gameConfig.getMapSize() || ((modeGame == 3 || modeGame == 4)&&ob.contains(head))) {
+	            playGameOverSound();  // Play game over sound
+	            endGame("Game Over: You hit the wall!");  // End the game
+	        }
         }
-
         // Check collision with itself (the body)
         for (int i = 1; i < snake.getBody().size(); i++) {
             if (head.equals(snake.getBody().get(i))) {
@@ -288,19 +355,26 @@ public class GameViewController {
 
         // Kiểm tra rắn ăn mồi
         if (head.equals(food.getPosition())) {
+
+        	snake.grow(newHead);
             score.increaseScore(10);
             System.out.println("Score increased, current score: " + score.getCurrentScore());  // Kiểm tra ở đây
+            
             if (modeGame == 3 || modeGame == 4) {
             	if(food.getType().getEffect() instanceof QuizFoodEffect) {
-            		isPaused=true;
+            		isPaused=true; 
             	    ((QuizFoodEffect) food.getType().getEffect()).setGameViewController(this);
-            	    
             	}
-            	food.getType().getEffect().applyEffect(snake, gameConfig,gameState);
+            }
+            Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
+            foodButton.setStyle("-fx-background-image: none");
+            snake.move(newHead);
+            drawSnake();
+            food.getType().getEffect().applyEffect(snake, gameConfig,gameState);
             spawnFood();
             updateScoreDisplay();
             playEatSound();  // Phát âm thanh khi ăn mồi
-        }}
+        }
 
      }
 
@@ -317,6 +391,7 @@ public class GameViewController {
             // Thiết lập giao diện dưới dạng modal
             Stage quizStage = new Stage();
             quizStage.setTitle("Câu hỏi");
+            quizStage.initStyle(StageStyle.UNDECORATED);
             quizStage.initOwner(gameGrid.getScene().getWindow());
             quizStage.initModality(Modality.APPLICATION_MODAL);
             quizStage.setScene(new Scene(quizRoot));
@@ -360,12 +435,14 @@ public class GameViewController {
             row = random.nextInt(gameConfig.getMapSize());
             col = random.nextInt(gameConfig.getMapSize());
         } while (isFoodOnSnake(new Position(row, col)));
-
+//        System.out.println(modeGame);
         if (modeGame == 1 || modeGame == 2) {
             food = FoodFactory.createNormalFood(row, col);
+//            System.out.println(row+" "+col);
         } else if (modeGame == 3 || modeGame == 4) {
             food = FoodFactory.createRandomFood(row, col);
         }
+        System.out.println("food spawn: "+row * gameConfig.getMapSize() + col);
     }
 
 	
@@ -402,7 +479,7 @@ public class GameViewController {
         isGameOver = true;
         String username = readUsernameFromFile();
         int diem=score.getCurrentScore();
-        new ScoreDAO().saveScore(diem, username);
+        new ScoreDAO().saveScore(diem, username,modeGame);
         // Hiển thị thông báo kết thúc game
         
         Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -424,7 +501,6 @@ public class GameViewController {
             Platform.exit();  // Thoát ứng dụng
             System.exit(0);
         }
-
     }
     @FXML
     private void switchMenuMain() {
