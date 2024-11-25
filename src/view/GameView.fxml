@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameViewController">
+<AnchorPane fx:id="BoardMain" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameViewController">
    <children>
        <BorderPane>
            <center>
@@ -37,7 +37,7 @@
                 <Label fx:id="scoreLabel" style="-fx-font-size: 20px; -fx-text-fill: black;" text="Score: 0" BorderPane.alignment="CENTER" />
          </top>
          <right>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #DACCB1;" BorderPane.alignment="CENTER">
+            <VBox fx:id="MenuInfor" prefHeight="777.0" prefWidth="450.0" style="-fx-background-color: #DACCB1;" BorderPane.alignment="CENTER">
                <children>
                   <MenuButton fx:id="menuButton" mnemonicParsing="false" onAction="#pauseGame" onMouseClicked="#pauseGame" prefHeight="28.0" prefWidth="78.0" text="Dừng">
                     <items>
@@ -66,6 +66,7 @@
                         <Image url="@menu.jpg" />
                      </image>
                   </ImageView>
+                  <ImageView fx:id="imgWeather" fitHeight="269.0" fitWidth="457.0" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="userTxt" alignment="CENTER" contentDisplay="CENTER" text="Người chơi">
                      <font>
                         <Font name="System Bold" size="28.0" />

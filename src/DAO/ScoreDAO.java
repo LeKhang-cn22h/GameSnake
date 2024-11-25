@@ -14,17 +14,17 @@ public class ScoreDAO implements DAOInterface <Score> {
 	public static ScoreDAO getInstance() {
 		return new ScoreDAO();
 	}
-	public void saveScore(int score, String username) {
+	public void saveScore(int score, String username, int mode) {
 	    int idUser = new UserDAO().getIdByUserName(username);
 	    if (idUser == -1) {
 	        System.out.println("Không tìm thấy người dùng");
 	        return;
 	    }
 
-	    String countScoresSql = "SELECT COUNT(*) AS total FROM score WHERE user_id = ?";
-	    String getMinScoreSql = "SELECT id, score FROM score WHERE user_id = ? ORDER BY score ASC, date_achieved DESC LIMIT 1";
+	    String countScoresSql = "SELECT COUNT(*) AS total FROM score WHERE user_id = ? AND idGameMode = ?";
+	    String getMinScoreSql = "SELECT id, score FROM score WHERE user_id = ? AND idGameMode = ? ORDER BY score ASC, date_achieved DESC LIMIT 1";
 	    String deleteMinScoreSql = "DELETE FROM score WHERE id = ?";
-	    String insertScoreSql = "INSERT INTO score (score, date_achieved, user_id) VALUES (?, ?, ?)";
+	    String insertScoreSql = "INSERT INTO score (score, date_achieved, user_id, idGameMode) VALUES (?, ?, ?, ?)";
 
 	    try (Connection conn = DatabaseConnection.getConnection()) {
 	        conn.setAutoCommit(false); // Bắt đầu giao tác để đảm bảo tính toàn vẹn dữ liệu
@@ -46,6 +46,7 @@ public class ScoreDAO implements DAOInterface <Score> {
 	                    ps.setInt(1, score);
 	                    ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
 	                    ps.setInt(3, idUser);
+	                    ps.setInt(4, mode);
 	                    int rowsInserted = ps.executeUpdate();
 	                    if (rowsInserted > 0) {
 	                        System.out.println("Điểm mới đã được thêm");
@@ -57,6 +58,7 @@ public class ScoreDAO implements DAOInterface <Score> {
 	                int minScore = Integer.MAX_VALUE;
 	                try (PreparedStatement ps = conn.prepareStatement(getMinScoreSql)) {
 	                    ps.setInt(1, idUser);
+	                    ps.setInt(2, mode);
 	                    var rs = ps.executeQuery();
 	                    if (rs.next()) {
 	                        minScoreId = rs.getInt("id");
@@ -79,6 +81,7 @@ public class ScoreDAO implements DAOInterface <Score> {
 	                        ps.setInt(1, score);
 	                        ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
 	                        ps.setInt(3, idUser);
+	                        ps.setInt(4, mode);
 	                        int rowsInserted = ps.executeUpdate();
 	                        if (rowsInserted > 0) {
 	                            System.out.println("Điểm mới đã thay thế điểm thấp nhất");
@@ -99,16 +102,19 @@ public class ScoreDAO implements DAOInterface <Score> {
 	        e.printStackTrace();
 	    }
 	}
-	public List<Rank> getTopScores(int limit) {
-	    String sql = "SELECT RANK() OVER (ORDER BY score DESC) AS rank, u.username, s.score, s.date_achieved " +
+	public List<Rank> getTopScores(int limit, int mode) {
+	    String sql = "SELECT RANK() OVER (ORDER BY s.score DESC) AS rank, u.username, s.score, s.date_achieved " +
 	                 "FROM score s JOIN users u ON s.user_id = u.id " +
+	                 "WHERE s.idGameMode = ? " +
 	                 "LIMIT ?";
 	    List<Rank> ranks = new ArrayList<>();
 
 	    try (Connection conn = DatabaseConnection.getConnection();
 	         PreparedStatement ps = conn.prepareStatement(sql)) {
-	        ps.setInt(1, limit);
+	        ps.setInt(1, mode); // Thêm điều kiện lọc theo idGameMode
+	        ps.setInt(2, limit); // Giới hạn số lượng kết quả
 	        var rs = ps.executeQuery();
+
 	        while (rs.next()) {
 	            int rank = rs.getInt("rank");
 	            String username = rs.getString("username");
@@ -119,6 +125,7 @@ public class ScoreDAO implements DAOInterface <Score> {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+
 	    return ranks;
 	}
 

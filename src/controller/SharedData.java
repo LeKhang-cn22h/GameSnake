@@ -29,4 +29,5 @@ public class SharedData {
     public static void setSelectedMode(int mode) {
         selectedMode = mode;
     }
+    
 }

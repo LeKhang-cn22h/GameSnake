@@ -5,11 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import database.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

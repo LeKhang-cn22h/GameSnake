@@ -8,6 +8,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -21,6 +24,10 @@ import DAO.ScoreDAO;
 import model.Rank;
 
 public class RankingController {
+	@FXML
+	private Label labMode;
+	@FXML
+	private MenuButton menuMode;
     @FXML
     private Button btnBack;
     @FXML
@@ -48,13 +55,6 @@ public class RankingController {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-
-        // Lấy dữ liệu từ cơ sở dữ liệu
-        ObservableList<Rank> ranks = FXCollections.observableArrayList(ScoreDAO.getInstance().getTopScores(10));
-
-        // Gán dữ liệu vào bảng
-        tableView.setItems(ranks);
-
         // Tạo MediaPlayer cho nhạc bảng xếp hạng và phát nhạc
         Media rankingMusic = new Media(getClass().getResource("/view/image_codinh/NhacNen.ogg").toString());
         rankingMediaPlayer = new MediaPlayer(rankingMusic);
@@ -112,5 +112,34 @@ public class RankingController {
             e.printStackTrace();
             
         }
+    }
+    @FXML
+    private void getRanking(ActionEvent event) {
+    	MenuItem mode = (MenuItem) event.getSource();
+    	labMode.setText(mode.getText());
+    	menuMode.setText(mode.getText());
+    	int modeG = 1;
+		switch (mode.getText()) {
+		case "Cổ Điển":
+			modeG = 1;
+			break;
+		case "Tự Do":
+			modeG = 2;
+			break;
+		case "Chướng ngại":
+			modeG = 3;
+			break;
+		case "Thách thức":
+			modeG = 4;
+			break;
+		default:
+			modeG = 5;
+			break;
+		}
+        // Lấy dữ liệu từ cơ sở dữ liệu
+        ObservableList<Rank> ranks = FXCollections.observableArrayList(ScoreDAO.getInstance().getTopScores(10,modeG));
+
+        // Gán dữ liệu vào bảng
+        tableView.setItems(ranks);
     }
 }

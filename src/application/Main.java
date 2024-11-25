@@ -3,10 +3,6 @@ package application;
 
 import java.io.File;
 
-import java.net.http.HttpClient;
-
-import java.net.URI;
-import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -15,10 +11,15 @@ import javafx.scene.Scene;
 //import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.URI;
+
+
+import org.json.JSONObject;
+
+import DAO.APIClient;
+import DAO.WeatherParser;
+import controller.GameEnvironment;
+
+
 
 public class Main extends Application {
 
@@ -55,8 +56,8 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
+
+
         launch(args);
-        HttpClient client = HttpClient.newHttpClient();
-        System.out.println("HttpClient is available and ready to use!");
     }
 }
