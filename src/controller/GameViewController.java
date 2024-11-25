@@ -34,6 +34,8 @@ import java.util.Optional;
 import java.util.Random;
 
 import java.net.URL;
+import javafx.scene.media.AudioClip;
+
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -74,9 +76,13 @@ public class GameViewController {
     @FXML
     private VBox MenuInfor;
     @FXML
+    private AudioClip eatSound;
+    private AudioClip gameOverSound;
     private ImageView imgWeather = new ImageView();
     
-
+    public GameViewController() {
+        initializeSounds();  // Gọi phương thức này trong constructor
+    }
     @FXML
     public void initialize() {
     	APIWeatherTime();
@@ -335,7 +341,12 @@ public class GameViewController {
     
     // Kiểm tra va chạm
     private void checkCollision() {
-        if (isGameOver) return;  // Skip collision checks if the game is already over
+    	
+        if (isGameOver) {
+        	playGameOverSound();
+        	return;
+        
+        }
         
         Position head = newHead;
         if(modeGame != 2) {
@@ -355,7 +366,7 @@ public class GameViewController {
 
         // Kiểm tra rắn ăn mồi
         if (head.equals(food.getPosition())) {
-
+        	playEatSound();
         	snake.grow(newHead);
             score.increaseScore(10);
             System.out.println("Score increased, current score: " + score.getCurrentScore());  // Kiểm tra ở đây
@@ -373,10 +384,43 @@ public class GameViewController {
             food.getType().getEffect().applyEffect(snake, gameConfig,gameState);
             spawnFood();
             updateScoreDisplay();
-            playEatSound();  // Phát âm thanh khi ăn mồi
+           
+        }}
+
+    private void initializeSounds() {
+        // Âm thanh khi ăn mồi
+        URL eatResource = getClass().getResource("/view/image_codinh/AnMoi.ogg");
+        if (eatResource != null) {
+            eatSound = new AudioClip(eatResource.toString());
+        } else {
+            System.out.println("Không tìm thấy file âm thanh khi ăn mồi! Kiểm tra lại đường dẫn.");
         }
 
-     }
+        // Âm thanh khi game over
+        URL gameOverResource = getClass().getResource("/view/image_codinh/Chet.ogg");
+        if (gameOverResource != null) {
+            gameOverSound = new AudioClip(gameOverResource.toString());
+        } else {
+            System.out.println("Không tìm thấy file âm thanh khi game over! Kiểm tra lại đường dẫn.");
+        }
+    }
+
+
+    private void playEatSound() {
+        if (eatSound != null) {
+            System.out.println("Đang phát âm thanh ăn mồi...");
+            eatSound.play();  // Phát âm thanh đã được tải sẵn
+        } else {
+            System.out.println("Không có âm thanh để phát.");
+        }
+    }
+    private void playGameOverSound() {
+    	if (gameOverSound != null) {
+            gameOverSound.play();  // Phát âm thanh khi game over
+        }
+    }
+ 
+
 
 
 
@@ -401,32 +445,7 @@ public class GameViewController {
             e.printStackTrace();
         }
     }
-    public void playGameOverSound() {
-        // Sử dụng getClass().getResource() để lấy đường dẫn hợp lệ
-        URL resource = getClass().getResource("/view/image_codinh/Chet.ogg");
-        
-        // Kiểm tra nếu resource là null
-        if (resource != null) {
-            Media media = new Media(resource.toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.play();
-        } else {
-            System.out.println("File âm thanh không tìm thấy!");
-        }
-    }
-    private void playEatSound() {
-        // Lấy URL của file âm thanh
-        URL resource = getClass().getResource("/view/image_codinh/AnMoi.ogg");
-
-        // Kiểm tra nếu tài nguyên âm thanh tồn tại
-        if (resource != null) {
-            Media media = new Media(resource.toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.play(); // Phát âm thanh
-        } else {
-            System.out.println("Không tìm thấy file âm thanh!");
-        }
-    }
+    
 
 
     private void spawnFood() {
@@ -460,6 +479,7 @@ public class GameViewController {
     @FXML
 //kết thúc trò chơi bàn phím tắt
     private void end() {
+    	playGameOverSound();
     	Alert alertend = new Alert(AlertType.CONFIRMATION);
     	alertend.setTitle("Thông báo");
         alertend.setContentText("Bạn có chắc muốn chơi lại ván mới?");

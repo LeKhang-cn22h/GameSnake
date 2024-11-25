@@ -1,4 +1,3 @@
-
 package application;
 
 import java.io.File;
@@ -12,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 import org.json.JSONObject;
 
@@ -53,6 +54,7 @@ public class Main extends Application {
 	            e.printStackTrace();
 	        }
     }
+    
 
 
     public static void main(String[] args) {
