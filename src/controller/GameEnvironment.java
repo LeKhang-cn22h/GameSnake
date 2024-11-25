@@ -11,14 +11,12 @@ public class GameEnvironment {
     private String weatherCondition;
     private int hour;
     private GameViewController gameController;
-    @FXML
-    private AnchorPane BoardMain;
-    @FXML
-    private ImageView imgWeather = new ImageView();
+
     public GameEnvironment(String weatherCondition, int hour, GameViewController gameController) {
         this.weatherCondition = weatherCondition;
         this.hour = hour;
         this.gameController = gameController;
+        
     }
 
     public void updateGameBasedOnWeather() {
@@ -56,7 +54,8 @@ public class GameEnvironment {
             String styleMenu = "-fx-background-color: #444444";
             String styleUser = "-fx-text-fill: #FFFFFF;";
             String styleButton = "-fx-background-color: #666666; -fx-text-fill: white;";
-            gameController.updateDarkMode(styleBoard, styleMenu, styleUser, styleButton);
+            String styleScore ="-fx-text-fill: white;";
+            gameController.updateDarkMode(styleBoard, styleMenu, styleUser, styleButton,styleScore);
 
             // Gán hình ảnh cho ImageView
             gameController.updateWeather(image);

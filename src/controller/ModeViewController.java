@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class ModeViewController {
@@ -21,6 +22,8 @@ public class ModeViewController {
 	private Button btnMode3;
 	@FXML
 	private Button btnMode4;
+	@FXML
+	private Button backMenu;
 	@FXML
 	private int getmodeGame(ActionEvent event) {
 		Button btnM = (Button) event.getSource();
@@ -47,7 +50,6 @@ public class ModeViewController {
             // Tải FXML cho GameView
             Parent gameViewRoot = FXMLLoader.load(getClass().getResource("/view/GameView.fxml"));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
             // Đặt giao diện mới cho Stage
             stage.setScene(new Scene(gameViewRoot));
             stage.show();
@@ -55,5 +57,24 @@ public class ModeViewController {
             e.printStackTrace();
         }
 	    return SharedData.getSelectedMode();
+	}
+	
+	@FXML
+	private void handleBackMenu(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/menuView.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) backMenu.getScene().getWindow();
+            stage.close(); // Đóng cửa sổ đăng nhập
+            Stage newStage = new Stage();
+            newStage.setScene(new Scene(root));
+            newStage.setTitle("Game Snake");
+            newStage.show();
+            newStage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
+            // Đặt focus vào root để nhận sự kiện bàn phím
+            root.requestFocus();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 }

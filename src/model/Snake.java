@@ -10,6 +10,7 @@ public class Snake {
 //    private Food food;  // Tham chiếu đến đối tượng Food
     private GameConfig gameConfig;
     private Random random;  // Để tạo vị trí ngẫu nhiên cho thức ăn
+    private String lastDirection; // Hướng trước đó
 
  // Trong class Snake
     public Snake(int startRow, int startCol, GameConfig gameConfig) {
@@ -19,6 +20,8 @@ public class Snake {
 //        this.food = food;  // Gán tham chiếu thức ăn
         this.gameConfig = gameConfig;  // Gán tham chiếu cấu hình game
         random = new Random();  // Khởi tạo đối tượng Random
+        lastDirection = "NONE"; // Khởi tạo hướng trước đó
+
     }
 
     public List<Position> getBody() {
@@ -56,14 +59,16 @@ public class Snake {
     // Thay đổi hướng di chuyển của rắn
     public void changeDirection(String direction) {
         // Đảm bảo rằng rắn không thể quay ngược lại chính nó
-        if ((direction.equals("UP") && !currentDirection.equals("DOWN")) ||
-            (direction.equals("DOWN") && !currentDirection.equals("UP")) ||
-            (direction.equals("LEFT") && !currentDirection.equals("RIGHT")) ||
-            (direction.equals("RIGHT") && !currentDirection.equals("LEFT"))) {
+        if ((direction.equals("UP") && !lastDirection.equals("DOWN")) ||
+            (direction.equals("DOWN") && !lastDirection.equals("UP")) ||
+            (direction.equals("LEFT") && !lastDirection.equals("RIGHT")) ||
+            (direction.equals("RIGHT") && !lastDirection.equals("LEFT"))) {
             currentDirection = direction;
         }
     }
-
+    public void updateDirectionAfterMove() {
+        lastDirection = currentDirection; // Lưu hướng hiện tại thành hướng cuối cùng sau mỗi lượt di chuyển
+    }
     // Tính toán vị trí mới của đầu rắn dựa trên hướng hiện tại
     public Position calculateNewHeadPosition(int modeGame) {
         Position currentHead = getHead();
@@ -111,6 +116,11 @@ public class Snake {
         return new Position(newRow, newCol);
 
     }
+
+	public String getCurrentDirection() {
+		// TODO Auto-generated method stub
+		return currentDirection;
+	}
     
 
    

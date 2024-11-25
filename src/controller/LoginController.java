@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
@@ -79,6 +80,8 @@ public class LoginController {
             newStage.setScene(new Scene(root));
             newStage.setTitle("Game Snake");
             newStage.show();
+            newStage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,6 +117,8 @@ public class LoginController {
             newStage.setScene(new Scene(root));
             newStage.setTitle("Đăng ký");
             newStage.show();
+            newStage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
+
         } catch (Exception e) {
             e.printStackTrace();
         }

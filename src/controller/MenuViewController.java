@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -128,6 +129,7 @@ public class MenuViewController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
+            stage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
 
             
         } catch (IOException e) {
@@ -141,6 +143,7 @@ public class MenuViewController {
             // Tải FXML cho GameView
             Parent gameViewRoot = FXMLLoader.load(getClass().getResource("/view/GameModeView.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
 
             // Đặt giao diện mới cho Stage
             stage.setScene(new Scene(gameViewRoot));
@@ -163,6 +166,7 @@ public class MenuViewController {
             // Đặt giao diện mới cho Stage
             stage.setScene(new Scene(rankingViewRoot));
             stage.show();
+            stage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
 
             // Tiếp tục phát nhạc nếu nó không đang phát
             

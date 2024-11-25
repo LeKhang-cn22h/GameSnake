@@ -128,6 +128,24 @@ public class ScoreDAO implements DAOInterface <Score> {
 
 	    return ranks;
 	}
+	public int getHighestScore(int modeGame) {
+	    String sql = "SELECT MAX(score) AS highest_score FROM score WHERE idGameMode = ?";
+	    int highestScore = 0;
+
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+	        ps.setInt(1, modeGame); // Gán giá trị cho điều kiện modeGame
+	        try (var rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                highestScore = rs.getInt("highest_score");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return highestScore;
+	}
 
 	
 	@Override
