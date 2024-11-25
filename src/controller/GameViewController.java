@@ -34,6 +34,14 @@ import java.util.Optional;
 import java.util.Random;
 
 import java.net.URL;
+import javafx.scene.media.AudioClip;
+
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.control.Button;
+import javafx.util.Duration;
+import javafx.animation.ScaleTransition;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -47,6 +55,10 @@ public class GameViewController {
 	private Image BgrMap;
 	private int modeGame;
 	private Position newHead;
+	@FXML
+	private Label labelRecord;
+	@FXML
+    private Label countdownLabel;
 	@FXML
 	private AnchorPane BoardMain;
 	@FXML
@@ -74,8 +86,14 @@ public class GameViewController {
     @FXML
     private VBox MenuInfor;
     @FXML
+    private AudioClip eatSound;
+    private AudioClip gameOverSound;
     private ImageView imgWeather = new ImageView();
     
+    public GameViewController() {
+        initializeSounds();  // Gọi phương thức này trong constructor
+    }
+   //test trong SnakeHead
 
     @FXML
     public void initialize() {
@@ -91,6 +109,7 @@ public class GameViewController {
         stackP.setPrefWidth(gameConfig.getButtonWidth()*gameConfig.getMapSize());
         stackP.setPrefHeight(gameConfig.getButtonHeight()*gameConfig.getMapSize());
         stackP.setFocusTraversable(false);
+        labelRecord.setText("Kỷ lục:"+new ScoreDAO().getHighestScore(modeGame));
      // Random vị trí mới cho food
 //        Position randomPos = randomPosition();
         
@@ -146,12 +165,13 @@ public class GameViewController {
     public void updateWeather(Image img) {
         imgWeather.setImage(img);
     }
-    public void updateDarkMode(String styleBoard, String styleMenu, String styleUser, String styleButton) {
+    public void updateDarkMode(String styleBoard, String styleMenu, String styleUser, String styleButton, String styleScore) {
 //    	BoardMain.setStyle("-fx-background-color: lightblue;");
     	BoardMain.setStyle(styleBoard);
     	MenuInfor.setStyle(styleMenu);
     	userTxt.setStyle(styleUser);
     	menuButton.setStyle(styleButton);
+    	scoreLabel.setStyle(styleScore);
     }
     public void updateMenuInfor(Image img) {
         imgWeather.setImage(img);
@@ -218,26 +238,37 @@ public class GameViewController {
             }
         }
         
-        for (Position position : snake.getBody()) {
+     // Duyệt qua tất cả các vị trí của cơ thể rắn
+        for (int i = 0; i < snake.getBody().size(); i++) {
+            Position position = snake.getBody().get(i);
             Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
-        	if (position == snake.getHead()) {
-//        		if(modeGame!=2) {
-//	    			if(position.getCol()>=0 || position.getCol()<gameConfig.getMapSize() || position.getRow()>=0 || position.getRow()<gameConfig.getMapSize()) {
-//		        		button.setStyle("-fx-background-image:url('/view/image_codinh/dua_hau.png');"
-//		        				+ "-fx-background-size:cover;"
-//		        				+ "-fx-background-repeat:no-repeat;");
-//		        		}
-//	    			}		
-//    			else {
-        		button.setStyle("-fx-background-image:url('/view/image_codinh/dua_hau.png');"
-        				+ "-fx-background-size:cover;"
-        				+ "-fx-background-repeat:no-repeat;");
-//        		}
-        	}else {
-                button.setStyle("-fx-background-color: "+ colorSnake +";");
-        	}
 
+            if (i == 0) {
+                // Đầu rắn
+                String headImage = getClass().getResource("/view/image_codinh/up.jpg").toExternalForm();
+                switch (snake.getCurrentDirection()) {
+                    case "UP":
+                        headImage = getClass().getResource("/view/image_codinh/up.jpg").toExternalForm();
+                        break;
+                    case "DOWN":
+                        headImage = getClass().getResource("/view/image_codinh/down.jpg").toExternalForm();
+                        break;
+                    case "LEFT":
+                        headImage =getClass().getResource("/view/image_codinh/left.jpg").toExternalForm();
+                        break;
+                    case "RIGHT":
+                        headImage = getClass().getResource("/view/image_codinh/right.jpg").toExternalForm();
+                        break;
+                }
+                button.setStyle("-fx-background-image:url(' " + headImage + "'); " +
+                                "-fx-background-size: cover; " +
+                                "-fx-background-position: center;");
+            } else {
+                // Thân rắn
+                button.setStyle("-fx-background-color: " + colorSnake + ";");
+            }
         }
+
         
     }
 
@@ -309,6 +340,7 @@ public class GameViewController {
                         snake.move(newHead);
                         drawSnake();
                         drawFood();
+                        snake.updateDirectionAfterMove();
                     });
                 }
                 try {
@@ -329,13 +361,74 @@ public class GameViewController {
 
     @FXML
     private void resumeGame() {
-        isPaused = false;
-        gameGrid.requestFocus();
+        if (isPaused) {
+            // Hiển thị Label đếm ngược và bắt đầu đếm
+            countdownLabel.setVisible(true);
+            final int[] countdown = {3}; // Số giây đếm ngược
+
+            // Hiệu ứng scale (phóng to) cho Label
+            ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.5), countdownLabel);
+            scaleTransition.setFromX(0); // Bắt đầu từ kích thước nhỏ
+            scaleTransition.setFromY(0); // Bắt đầu từ kích thước nhỏ
+            scaleTransition.setToX(1);   // Kích thước cuối cùng
+            scaleTransition.setToY(1);   // Kích thước cuối cùng
+            scaleTransition.setCycleCount(1);
+
+            // Hiệu ứng fade (mờ dần)
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), countdownLabel);
+            fadeTransition.setFromValue(1.0); // Bắt đầu từ độ mờ hoàn toàn
+            fadeTransition.setToValue(0.0);   // Mờ dần đến 0
+            fadeTransition.setCycleCount(1);
+
+            // Timeline để thực hiện đếm ngược
+            Timeline timeline = new Timeline();
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> {
+                countdownLabel.setText(String.valueOf(countdown[0])); // Cập nhật giao diện
+                countdown[0]--;
+
+                // Áp dụng hiệu ứng mỗi lần đếm ngược
+                scaleTransition.play();  // Hiệu ứng phóng to
+                fadeTransition.play();   // Hiệu ứng mờ dần
+
+                if (countdown[0] < 0) {
+                    // Kết thúc đếm ngược
+                    timeline.stop();
+                    countdownLabel.setText("Bắt đầu"); // Hiển thị chữ "Bắt đầu"
+
+                    // Áp dụng hiệu ứng fade cho chữ "Bắt đầu"
+                    FadeTransition startFadeTransition = new FadeTransition(Duration.seconds(0.5), countdownLabel);
+                    startFadeTransition.setFromValue(0.0);
+                    startFadeTransition.setToValue(1.0);
+                    startFadeTransition.play(); // Hiển thị chữ "Bắt đầu"
+
+                    // Đảm bảo Label không bị ẩn quá sớm
+                    startFadeTransition.setOnFinished(event1 -> {
+                        // Ẩn Label sau khi đếm ngược
+                        countdownLabel.setVisible(false); // Ẩn Label đếm ngược
+                        isPaused = false; // Tiếp tục trò chơi
+                        gameGrid.requestFocus(); // Lấy lại focus cho GridPane
+                        System.out.println("Game Resumed");
+                    });
+                }
+            }));
+
+            timeline.setCycleCount(countdown[0] + 1);
+            timeline.play();
+        }
     }
+
+
+
+
     
     // Kiểm tra va chạm
     private void checkCollision() {
-        if (isGameOver) return;  // Skip collision checks if the game is already over
+    	
+        if (isGameOver) {
+        	playGameOverSound();
+        	return;
+        
+        }
         
         Position head = newHead;
         if(modeGame != 2) {
@@ -355,28 +448,80 @@ public class GameViewController {
 
         // Kiểm tra rắn ăn mồi
         if (head.equals(food.getPosition())) {
-
-        	snake.grow(newHead);
+            playEatSound();
+            Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
+            onFoodEaten(foodButton); // Gọi vào phương thức onFoodEaten với tham số là foodButton
+            
+            snake.grow(newHead);
             score.increaseScore(10);
             System.out.println("Score increased, current score: " + score.getCurrentScore());  // Kiểm tra ở đây
             
-            if (modeGame == 3 || modeGame == 4) {
-            	if(food.getType().getEffect() instanceof QuizFoodEffect) {
-            		isPaused=true; 
-            	    ((QuizFoodEffect) food.getType().getEffect()).setGameViewController(this);
-            	}
+            if (modeGame == 4) {
+                if (food.getType().getEffect() instanceof QuizFoodEffect) {
+                    isPaused = true;
+                    ((QuizFoodEffect) food.getType().getEffect()).setGameViewController(this);
+                }
             }
-            Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
+            
             foodButton.setStyle("-fx-background-image: none");
             snake.move(newHead);
             drawSnake();
-            food.getType().getEffect().applyEffect(snake, gameConfig,gameState);
+            food.getType().getEffect().applyEffect(snake, gameConfig, gameState);
             spawnFood();
             updateScoreDisplay();
-            playEatSound();  // Phát âm thanh khi ăn mồi
         }
 
-     }
+    }
+//hiệu ứng khi ăn mồi
+    public void onFoodEaten(Button foodButton) {
+        // Hiệu ứng fade (nhấp nháy)
+        FadeTransition fade = new FadeTransition(Duration.seconds(0.5), foodButton);
+        fade.setFromValue(1.0); // Bắt đầu từ độ mờ hoàn toàn
+        fade.setToValue(0.0);   // Mờ dần đến 0
+        fade.setCycleCount(2);  // Lặp lại hai lần (mờ đi rồi hiện lại)
+        fade.setAutoReverse(true); // Tự động đảo ngược hiệu ứng
+
+        // Khi hiệu ứng kết thúc, ẩn mồi
+
+        // Bắt đầu hiệu ứng
+        fade.play();
+        }
+    
+    
+    private void initializeSounds() {
+        // Âm thanh khi ăn mồi
+        URL eatResource = getClass().getResource("/view/image_codinh/AnMoi.ogg");
+        if (eatResource != null) {
+            eatSound = new AudioClip(eatResource.toString());
+        } else {
+            System.out.println("Không tìm thấy file âm thanh khi ăn mồi! Kiểm tra lại đường dẫn.");
+        }
+
+        // Âm thanh khi game over
+        URL gameOverResource = getClass().getResource("/view/image_codinh/Chet.ogg");
+        if (gameOverResource != null) {
+            gameOverSound = new AudioClip(gameOverResource.toString());
+        } else {
+            System.out.println("Không tìm thấy file âm thanh khi game over! Kiểm tra lại đường dẫn.");
+        }
+    }
+
+
+    private void playEatSound() {
+        if (eatSound != null) {
+            System.out.println("Đang phát âm thanh ăn mồi...");
+            eatSound.play();  // Phát âm thanh đã được tải sẵn
+        } else {
+            System.out.println("Không có âm thanh để phát.");
+        }
+    }
+    private void playGameOverSound() {
+    	if (gameOverSound != null) {
+            gameOverSound.play();  // Phát âm thanh khi game over
+        }
+    }
+ 
+
 
 
 
@@ -396,37 +541,12 @@ public class GameViewController {
             quizStage.initModality(Modality.APPLICATION_MODAL);
             quizStage.setScene(new Scene(quizRoot));
             quizStage.showAndWait();
-            isPaused=false;
+            resumeGame();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void playGameOverSound() {
-        // Sử dụng getClass().getResource() để lấy đường dẫn hợp lệ
-        URL resource = getClass().getResource("/view/image_codinh/Chet.ogg");
-        
-        // Kiểm tra nếu resource là null
-        if (resource != null) {
-            Media media = new Media(resource.toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.play();
-        } else {
-            System.out.println("File âm thanh không tìm thấy!");
-        }
-    }
-    private void playEatSound() {
-        // Lấy URL của file âm thanh
-        URL resource = getClass().getResource("/view/image_codinh/AnMoi.ogg");
-
-        // Kiểm tra nếu tài nguyên âm thanh tồn tại
-        if (resource != null) {
-            Media media = new Media(resource.toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.play(); // Phát âm thanh
-        } else {
-            System.out.println("Không tìm thấy file âm thanh!");
-        }
-    }
+    
 
 
     private void spawnFood() {
@@ -436,11 +556,11 @@ public class GameViewController {
             col = random.nextInt(gameConfig.getMapSize());
         } while (isFoodOnSnake(new Position(row, col)));
 //        System.out.println(modeGame);
-        if (modeGame == 1 || modeGame == 2) {
-            food = FoodFactory.createNormalFood(row, col);
-//            System.out.println(row+" "+col);
-        } else if (modeGame == 3 || modeGame == 4) {
+        if (modeGame == 4) {
             food = FoodFactory.createRandomFood(row, col);
+//            System.out.println(row+" "+col);
+        } else  {
+            food = FoodFactory.createNormalFood(row, col);
         }
         System.out.println("food spawn: "+row * gameConfig.getMapSize() + col);
     }
@@ -456,10 +576,11 @@ public class GameViewController {
         });
     }
 
-
+    
     @FXML
 //kết thúc trò chơi bàn phím tắt
     private void end() {
+    	playGameOverSound();
     	Alert alertend = new Alert(AlertType.CONFIRMATION);
     	alertend.setTitle("Thông báo");
         alertend.setContentText("Bạn có chắc muốn chơi lại ván mới?");

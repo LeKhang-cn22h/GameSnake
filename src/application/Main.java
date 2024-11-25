@@ -6,6 +6,7 @@ import java.io.File;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 //import javafx.scene.control.PasswordField;
 //import javafx.scene.control.TextField;
 //import javafx.fxml.FXML;
@@ -29,6 +30,7 @@ public class Main extends Application {
         File file = new File(filePath);
     	String title;
     	String resource;
+    
         if(!file.exists() || file.length()==0) {
         	title = "Login";
         	resource = "/view/interface.fxml";
@@ -47,6 +49,7 @@ public class Main extends Application {
 			    	primaryStage.setScene(scene);
 		            primaryStage.setTitle(title);
 		            primaryStage.show();
+		            primaryStage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
 		            // Đặt focus vào root để nhận sự kiện bàn phím
 		            root.requestFocus();
 	        } catch (Exception e) {
