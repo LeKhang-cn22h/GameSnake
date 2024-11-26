@@ -73,7 +73,7 @@
                <children>
                   <ImageView fitHeight="318.0" fitWidth="459.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@menu.jpg" />
+                        <Image url="@image_menu/menu.jpg" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="imgWeather" fitHeight="269.0" fitWidth="323.0" pickOnBounds="true" preserveRatio="true" />

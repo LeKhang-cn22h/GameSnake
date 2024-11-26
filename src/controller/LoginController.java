@@ -80,7 +80,7 @@ public class LoginController {
             newStage.setScene(new Scene(root));
             newStage.setTitle("Game Snake");
             newStage.show();
-            newStage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
+            newStage.getIcons().add(new Image(getClass().getResource("/view/image_signLogin/SNAKE.png").toExternalForm()));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,7 +117,7 @@ public class LoginController {
             newStage.setScene(new Scene(root));
             newStage.setTitle("Đăng ký");
             newStage.show();
-            newStage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
+            newStage.getIcons().add(new Image(getClass().getResource("/view/image_signLogin/SNAKE.png").toExternalForm()));
 
         } catch (Exception e) {
             e.printStackTrace();

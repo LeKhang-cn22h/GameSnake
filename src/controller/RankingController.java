@@ -56,7 +56,7 @@ public class RankingController {
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         // Tạo MediaPlayer cho nhạc bảng xếp hạng và phát nhạc
-        Media rankingMusic = new Media(getClass().getResource("/view/image_codinh/NhacNen.ogg").toString());
+        Media rankingMusic = new Media(getClass().getResource("/view/music/NhacNen.ogg").toString());
         rankingMediaPlayer = new MediaPlayer(rankingMusic);
         rankingMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Lặp lại nhạc
         rankingMediaPlayer.play();
