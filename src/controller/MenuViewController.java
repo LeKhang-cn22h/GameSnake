@@ -182,10 +182,11 @@ public class MenuViewController {
         helpAlert.setTitle("Hướng dẫn chơi game Rắn săn mồi");
         helpAlert.setHeaderText("Cách chơi game Rắn săn mồi trên laptop");
         helpAlert.setContentText(
-                "1. Dùng các phím mũi tên để điều khiển rắn:\n" +
+        		"1.Game có nhiều chế độ để người chơi có thể khám phá!\n"+
+                "2. Dùng các phím mũi tên để điều khiển rắn:\n" +
                 "   - Lên (↑), Xuống (↓), Trái (←), Phải (→).\n" +
-                "2. Cố gắng ăn mồi để tăng điểm.\n" +
-                "3. Tránh va chạm vào thân rắn hoặc tường để không bị thua.\n" +
+                "3. Cố gắng ăn mồi để tăng điểm.\n" +
+                "4. Tránh va chạm vào thân rắn, tường hoặc chướng ngại vật(nếu có) để không bị thua.\n" +
                 "Chúc bạn chơi game vui vẻ!"
         );
 
