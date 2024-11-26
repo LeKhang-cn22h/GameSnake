@@ -1,9 +1,7 @@
 package controller;
 
-import javafx.fxml.FXML;
+
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.time.LocalTime;
 
@@ -41,14 +39,12 @@ public class GameEnvironment {
         if (hour >= 6 && hour < 18) {
             // Tạo một Image từ đường dẫn file hoặc URL
             Image image = new Image(getClass().getResource("/view/image_codinh/sun.png").toExternalForm()); // Đảm bảo sử dụng đúng đường dẫn
-
             // Gán hình ảnh cho ImageView
             gameController.updateWeather(image);
             System.out.println("Setting environment: trời sáng");
         } else {
-            // Tạo một Image từ đường dẫn file hoặc URL
-            Image image = new Image(getClass().getResource("/view/image_codinh/moon.png").toExternalForm()); // Đảm bảo sử dụng đúng đường dẫn
-
+    	    Image image = new Image(getClass().getResource("/view/image_codinh/moon.png").toExternalForm());
+    	    gameController.updateWeather(image);
             // Cập nhật chế độ giao diện tối
             String styleBoard = "-fx-background-color: #2E2E2E;";
             String styleMenu = "-fx-background-color: #444444";
@@ -58,7 +54,7 @@ public class GameEnvironment {
             gameController.updateDarkMode(styleBoard, styleMenu, styleUser, styleButton,styleScore);
 
             // Gán hình ảnh cho ImageView
-            gameController.updateWeather(image);
+            
             System.out.println("Setting environment: trời tối");
         }
     }

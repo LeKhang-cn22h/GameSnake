@@ -28,7 +28,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -39,7 +39,6 @@ import javafx.scene.media.AudioClip;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.control.Button;
 import javafx.util.Duration;
 import javafx.animation.ScaleTransition;
 
@@ -50,7 +49,8 @@ import DAO.ScoreDAO;
 import DAO.WeatherParser;
 
 public class GameViewController {
-	private List<Position> ob =  Arrays.asList(new Position(3, 15),new Position(19, 5),new Position(7, 9),new Position(1, 13),new Position(10, 6),new Position(4, 18),new Position(2, 2),new Position(8, 14),new Position(11, 11),new Position(16, 7));
+	private List<Position> ob = Obstacle.map1;
+	private boolean checkMap = false;
 	private String colorSnake;
 	private Image BgrMap;
 	private int modeGame;
@@ -88,6 +88,7 @@ public class GameViewController {
     @FXML
     private AudioClip eatSound;
     private AudioClip gameOverSound;
+    @FXML
     private ImageView imgWeather = new ImageView();
     
     public GameViewController() {
@@ -173,9 +174,9 @@ public class GameViewController {
     	menuButton.setStyle(styleButton);
     	scoreLabel.setStyle(styleScore);
     }
-    public void updateMenuInfor(Image img) {
-        imgWeather.setImage(img);
-    }
+//    public void updateMenuInfor(Image img) {
+//        imgWeather.setImage(img);
+//    }
 
     public Position randomPosition() {
         Random random = new Random();
@@ -224,6 +225,25 @@ public class GameViewController {
     StackPane.setAlignment(imgGame, Pos.CENTER); // Hình nền căn giữa
     StackPane.setAlignment(gameGrid, Pos.CENTER); // Bàn cờ căn giữa
 	}
+	
+	private void reset() {
+		
+        addOb();
+        checkMap=false;
+	}
+	
+	private boolean checkChangeMap() {
+		if(score.getCurrentScore()==100 || score.getCurrentScore()==200 || score.getCurrentScore()==300 || score.getCurrentScore()==400) {
+			snake = new Snake(10, 10, gameConfig);
+			newHead = new Position(10,10);
+			System.out.println("set snake");
+			return true;
+		}
+		return false;
+	}
+//	private void changeMap(boolean checkChangeMap) {
+//		
+//	}
 
     private void drawSnake() {
         for (int row = 0; row < gameConfig.getMapSize(); row++) {
@@ -231,10 +251,33 @@ public class GameViewController {
                 Button button = (Button) gameGrid.getChildren().get(row * gameConfig.getMapSize() + col);
                 button.setStyle("-fx-background-color: transparent;");
                 button.setFocusTraversable(false);
-               if (modeGame==3 || modeGame==4) {
-            	   addOb();
-               }
-              
+                if (modeGame==4) {
+             	   addOb();
+                }else if (modeGame==3) {
+             	   if(score.getCurrentScore() < 100) {
+             		   ob = Obstacle.map1;
+             	   }
+             	   else if (score.getCurrentScore() < 200) {
+             		   ob = Obstacle.map2;
+             	   }
+             	   else if (score.getCurrentScore() < 300) {
+             		   ob = Obstacle.map3;
+             	   }
+             	   else if (score.getCurrentScore() < 400) {
+             		   ob = Obstacle.map4;
+             	   }
+             	   else {
+             		   ob = Obstacle.map5;
+             	   }
+                    if(checkMap == true) {
+                    	pauseGame();
+                 	   reset();
+                 	   resumeGame();
+                    }else	addOb();
+
+                }
+
+        	   
             }
         }
         
@@ -268,7 +311,6 @@ public class GameViewController {
                 button.setStyle("-fx-background-color: " + colorSnake + ";");
             }
         }
-
         
     }
 
@@ -454,6 +496,7 @@ public class GameViewController {
             
             snake.grow(newHead);
             score.increaseScore(10);
+            checkMap=checkChangeMap();
             System.out.println("Score increased, current score: " + score.getCurrentScore());  // Kiểm tra ở đây
             
             if (modeGame == 4) {
