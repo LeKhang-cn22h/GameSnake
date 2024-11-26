@@ -91,9 +91,10 @@ public class GameViewController {
     private AudioClip gameOverSound;
      @FXML
     private AudioClip moveSound;
-
     @FXML
     private ImageView imgWeather = new ImageView();
+    private String headImage;
+    private String obImage;
     
     public GameViewController() {
         initializeSounds();  // Gọi phương thức này trong constructor
@@ -209,9 +210,14 @@ public class GameViewController {
     }
     
     private void addOb() {
+    	obImage = getClass().getResource("/view/image_chuongngaivat/stone.png").toExternalForm();
         for (Position position : ob) {
             Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
-            button.setStyle("-fx-background-color: red;");
+            button.setStyle("-fx-background-image: url('" + obImage + "'); " +
+                    "-fx-background-size: cover; " +
+                    "-fx-background-repeat: no-repeat; " +
+                    "-fx-background-color: transparent; " +
+                    "-fx-background-position: center;");
         }
     }
 
@@ -297,7 +303,7 @@ public class GameViewController {
 
             if (i == 0) {
                 // Đầu rắn
-                String headImage = getClass().getResource("/view/image_snake/up.jpg").toExternalForm();
+                headImage = getClass().getResource("/view/image_snake/up.jpg").toExternalForm();
                 switch (snake.getCurrentDirection()) {
                     case "UP":
                         headImage = getClass().getResource("/view/image_snake/up.jpg").toExternalForm();
@@ -322,7 +328,7 @@ public class GameViewController {
             }
            
         }
-        
+        System.out.println("vẽ xong");
     }
 
 
@@ -378,7 +384,6 @@ public class GameViewController {
             case LEFT: snake.changeDirection("LEFT"); break;
             case RIGHT: snake.changeDirection("RIGHT"); break;
             default: break;
-            
         }
     }
 
@@ -466,7 +471,7 @@ public class GameViewController {
                     });
                 }
             }));
-
+            
             timeline.setCycleCount(countdown[0] + 1);
             timeline.play();
         }
@@ -505,8 +510,8 @@ public class GameViewController {
         if (head.equals(food.getPosition())) {
             playEatSound();
             Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
-            onFoodEaten(foodButton); // Gọi vào phương thức onFoodEaten với tham số là foodButton
-            
+        	onFoodEaten(foodButton); // Gọi vào phương thức onFoodEaten với tham số là foodButton
+
             snake.grow(newHead);
             score.increaseScore(10);
             checkMap=checkChangeMap();
@@ -519,7 +524,8 @@ public class GameViewController {
                 }
             }
             
-            foodButton.setStyle("-fx-background-image: none");
+//            foodButton.setStyle("-fx-background-image: none");
+            
             snake.move(newHead);
             drawSnake();
             food.getType().getEffect().applyEffect(snake, gameConfig, gameState);
