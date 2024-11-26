@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ModeViewController">
+<AnchorPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ModeViewController">
    <children>
-      <Pane prefHeight="500.0" prefWidth="700.0">
+      <Pane prefHeight="560.0" prefWidth="700.0">
          <children>
             <VBox layoutX="47.0" layoutY="39.0" prefHeight="166.0" prefWidth="215.0">
                <children>
-                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="216.0" fitWidth="214.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@image_cheDoChoi/coDien.jpg" />
                      </image>
@@ -23,7 +23,7 @@
             </VBox>
             <VBox layoutX="423.0" layoutY="39.0" prefHeight="166.0" prefWidth="215.0">
                <children>
-                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="215.0" fitWidth="218.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@image_cheDoChoi/tuDo.jpg" />
                      </image>
@@ -33,7 +33,7 @@
             </VBox>
             <VBox layoutX="47.0" layoutY="303.0" prefHeight="166.0" prefWidth="215.0">
                <children>
-                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="221.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@image_cheDoChoi/chuongNgai.jpg" />
                      </image>
@@ -43,7 +43,7 @@
             </VBox>
             <VBox layoutX="423.0" layoutY="309.0" prefHeight="166.0" prefWidth="215.0">
                <children>
-                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="215.0" fitWidth="732.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@image_cheDoChoi/thachThuc.jpg" />
                      </image>

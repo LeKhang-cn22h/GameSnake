@@ -48,9 +48,10 @@ public class GameEnvironment {
         } else {
 
             // Tạo một Image từ đường dẫn file hoặc URL
+        	
             Image image = new Image(getClass().getResource("/view/image_weather/moon.png").toExternalForm()); // Đảm bảo sử dụng đúng đường dẫn
 
-
+        	gameController.updateWeather(image);
             // Cập nhật chế độ giao diện tối
             String styleBoard = "-fx-background-color: #2E2E2E;";
             String styleMenu = "-fx-background-color: #444444";

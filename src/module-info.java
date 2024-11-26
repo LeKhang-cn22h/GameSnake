@@ -1,4 +1,4 @@
-module game {
+module GameSnake {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;

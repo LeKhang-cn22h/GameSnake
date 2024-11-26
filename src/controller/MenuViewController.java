@@ -166,7 +166,7 @@ public class MenuViewController {
             // Đặt giao diện mới cho Stage
             stage.setScene(new Scene(rankingViewRoot));
             stage.show();
-            stage.getIcons().add(new Image(getClass().getResource("/view/image_signLoginSNAKE.png").toExternalForm()));
+            stage.getIcons().add(new Image(getClass().getResource("/view/image_signLogin/SNAKE.png").toExternalForm()));
 
             // Tiếp tục phát nhạc nếu nó không đang phát
             

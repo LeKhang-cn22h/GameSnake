@@ -34,6 +34,7 @@ public class ScoreDAO implements DAOInterface <Score> {
 	            int totalScores = 0;
 	            try (PreparedStatement ps = conn.prepareStatement(countScoresSql)) {
 	                ps.setInt(1, idUser);
+	                ps.setInt(2, mode);
 	                var rs = ps.executeQuery();
 	                if (rs.next()) {
 	                    totalScores = rs.getInt("total");
