@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -14,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="BoardMain" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameViewController">
+<AnchorPane fx:id="BoardMain" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameViewController">
    <children>
        <BorderPane>
            <center>
@@ -54,9 +60,9 @@
                   </HBox>
                   <StackPane fx:id="stackP" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <ImageView fx:id="imgGame" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-<Label fx:id="countdownLabel" alignment="CENTER" style="-fx-font-size: 40px; -fx-text-fill: red;" text="" visible="false" />                            
+                        <ImageView fx:id="imgGame" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />                            
                             <GridPane fx:id="gameGrid" alignment="CENTER" hgap="1" style="-fx-border-color: green;" vgap="1" />
+<Label fx:id="countdownLabel" alignment="CENTER" style="-fx-font-size: 40px; -fx-text-fill: red;" text="" visible="false" />
                      </children>
                   </StackPane>
                   </children>
