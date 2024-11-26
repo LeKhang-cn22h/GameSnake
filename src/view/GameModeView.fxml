@@ -13,13 +13,21 @@
          <children>
             <VBox layoutX="47.0" layoutY="39.0" prefHeight="166.0" prefWidth="215.0">
                <children>
-                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@image_cheDoChoi/coDien.jpg" />
+                     </image>
+                  </ImageView>
                   <Button fx:id="btnMode1" mnemonicParsing="false" onAction="#getmodeGame" prefHeight="53.0" prefWidth="215.0" text="Cổ Điển" />
                </children>
             </VBox>
             <VBox layoutX="423.0" layoutY="39.0" prefHeight="166.0" prefWidth="215.0">
                <children>
-                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@image_cheDoChoi/tuDo.jpg" />
+                     </image>
+                  </ImageView>
                   <Button fx:id="btnMode2" mnemonicParsing="false" onAction="#getmodeGame" prefHeight="53.0" prefWidth="215.0" text="Tự Do" />
                </children>
             </VBox>
@@ -27,7 +35,7 @@
                <children>
                   <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@image_codinh/bg1.png" />
+                        <Image url="@image_cheDoChoi/chuongNgai.jpg" />
                      </image>
                   </ImageView>
                   <Button fx:id="btnMode3" mnemonicParsing="false" onAction="#getmodeGame" prefHeight="53.0" prefWidth="215.0" text="Chướng ngại" />
@@ -37,7 +45,7 @@
                <children>
                   <ImageView fitHeight="142.0" fitWidth="215.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@image_codinh/test.jpg" />
+                        <Image url="@image_cheDoChoi/thachThuc.jpg" />
                      </image>
                   </ImageView>
                   <Button fx:id="btnMode4" mnemonicParsing="false" onAction="#getmodeGame" prefHeight="53.0" prefWidth="215.0" text="Thách thức" />

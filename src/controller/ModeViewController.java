@@ -70,7 +70,7 @@ public class ModeViewController {
             newStage.setScene(new Scene(root));
             newStage.setTitle("Game Snake");
             newStage.show();
-            newStage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
+            newStage.getIcons().add(new Image(getClass().getResource("/view/image_signLogin/SNAKE.png").toExternalForm()));
             // Đặt focus vào root để nhận sự kiện bàn phím
             root.requestFocus();
 	    } catch (Exception e) {

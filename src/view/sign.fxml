@@ -18,7 +18,7 @@
                <children>
                   <ImageView fitHeight="500.0" fitWidth="657.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@SNAKE.png" />
+                        <Image url="@image_signLogin/SNAKE.png" />
                      </image>
                   </ImageView>
                </children>

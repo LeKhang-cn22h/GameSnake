@@ -21,7 +21,7 @@ public class GameEnvironment {
 
     public void updateGameBasedOnWeather() {
         if (weatherCondition.contains("rain")) {
-            URL resource = getClass().getResource("/view/image_codinh/rain.png");
+            URL resource = getClass().getResource("/view/image_weather/rain.png");
             if (resource != null) {
                 Image image = new Image(resource.toExternalForm());
                 gameController.updateWeather(image);
@@ -40,14 +40,14 @@ public class GameEnvironment {
 
         if (hour >= 6 && hour < 18) {
             // Tạo một Image từ đường dẫn file hoặc URL
-            Image image = new Image(getClass().getResource("/view/image_codinh/sun.png").toExternalForm()); // Đảm bảo sử dụng đúng đường dẫn
+            Image image = new Image(getClass().getResource("/view/image_weather/sun.png").toExternalForm()); // Đảm bảo sử dụng đúng đường dẫn
 
             // Gán hình ảnh cho ImageView
             gameController.updateWeather(image);
             System.out.println("Setting environment: trời sáng");
         } else {
             // Tạo một Image từ đường dẫn file hoặc URL
-            Image image = new Image(getClass().getResource("/view/image_codinh/moon.png").toExternalForm()); // Đảm bảo sử dụng đúng đường dẫn
+            Image image = new Image(getClass().getResource("/view/image_weather/moon.png").toExternalForm()); // Đảm bảo sử dụng đúng đường dẫn
 
             // Cập nhật chế độ giao diện tối
             String styleBoard = "-fx-background-color: #2E2E2E;";

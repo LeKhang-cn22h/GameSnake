@@ -49,7 +49,7 @@ public class Main extends Application {
 			    	primaryStage.setScene(scene);
 		            primaryStage.setTitle(title);
 		            primaryStage.show();
-		            primaryStage.getIcons().add(new Image(getClass().getResource("/view/SNAKE.png").toExternalForm()));
+		            primaryStage.getIcons().add(new Image(getClass().getResource("/view/image_signLogin/SNAKE.png").toExternalForm()));
 		            // Đặt focus vào root để nhận sự kiện bàn phím
 		            root.requestFocus();
 	        } catch (Exception e) {

@@ -1,8 +1,11 @@
 package model;
 
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import javafx.scene.media.AudioClip;
 
 public class Snake {
     private List<Position> body;  // Cơ thể của rắn lưu trữ dưới dạng danh sách các vị trí
@@ -11,7 +14,7 @@ public class Snake {
     private GameConfig gameConfig;
     private Random random;  // Để tạo vị trí ngẫu nhiên cho thức ăn
     private String lastDirection; // Hướng trước đó
-
+    private AudioClip moveSound;
  // Trong class Snake
     public Snake(int startRow, int startCol, GameConfig gameConfig) {
         body = new LinkedList<>();
@@ -21,8 +24,9 @@ public class Snake {
         this.gameConfig = gameConfig;  // Gán tham chiếu cấu hình game
         random = new Random();  // Khởi tạo đối tượng Random
         lastDirection = "NONE"; // Khởi tạo hướng trước đó
-
+        initializeSounds();
     }
+    
 
     public List<Position> getBody() {
         return body;
@@ -33,17 +37,42 @@ public class Snake {
     }
 
     public void move(Position newHead) {
-//        Position newHead = calculateNewHeadPosition();  // Tính toán vị trí mới của đầu rắn
 
-        // Kiểm tra nếu đầu rắn ăn trúng thức ăn
-//        if (newHead.equals(food.getPosition())) {
-//            grow();  // Nếu ăn được mồi, rắn dài ra
-////            food.setPosition(generateRandomFoodPosition());  // Đặt lại vị trí thức ăn ngẫu nhiên
-//        } else {
             body.add(0, newHead);  // Nếu không ăn mồi, di chuyển đầu rắn và giữ nguyên chiều dài
-            body.remove(body.size()-1);  // Loại bỏ phần đuôi để rắn duy trì kích thước
-//        }
+            body.remove(body.size()-1);  
+            if(currentDirection!="NONE") {
+                SnakeMove();
+
+            }
+
+           
     }
+    private void initializeSounds() {
+        
+        URL moveResource = getClass().getResource("/view/music/SoundMove.ogg");
+        if (moveResource != null) {
+            System.out.println("Path to move sound: " + moveResource); // Kiểm tra đường dẫn
+            moveSound = new AudioClip(moveResource.toExternalForm());
+        } else {
+            System.out.println("Không tìm thấy file âm thanh di chuyển! Kiểm tra lại đường dẫn.");
+        } 
+    }
+
+    public void SnakeMove() {
+        //System.out.println("SnakeMove được gọi");
+        if (moveSound != null) {
+            System.out.println("moveSound không null");
+            if (!moveSound.isPlaying()) {
+                moveSound.play();
+                System.out.println("Đã phát âm thanh di chuyển");
+            } else {
+                System.out.println("Âm thanh đang phát, không phát lại");
+            }
+        } else {
+            //System.out.println("moveSound chưa được khởi tạo");
+        }
+    }
+
 
     // Làm cho rắn dài ra khi ăn mồi
  // Phương thức để làm cho rắn dài ra khi ăn mồi
@@ -52,7 +81,8 @@ public class Snake {
 //        Position newHead = calculateNewHeadPosition();  // Tính toán vị trí mới cho đầu rắn
 
         // Thêm phần mới vào đầu danh sách body
-        body.add(body.size(), newHead);  // Thêm đầu rắn mới vào vị trí đầu tiên của body
+        body.add(body.size(), newHead); // Thêm đầu rắn mới vào vị trí đầu tiên của body
+       
     }
 
 
@@ -63,6 +93,8 @@ public class Snake {
             (direction.equals("DOWN") && !lastDirection.equals("UP")) ||
             (direction.equals("LEFT") && !lastDirection.equals("RIGHT")) ||
             (direction.equals("RIGHT") && !lastDirection.equals("LEFT"))) {
+            
+
             currentDirection = direction;
         }
     }
@@ -71,6 +103,7 @@ public class Snake {
     }
     // Tính toán vị trí mới của đầu rắn dựa trên hướng hiện tại
     public Position calculateNewHeadPosition(int modeGame) {
+  
         Position currentHead = getHead();
         int newRow = currentHead.getRow();
         int newCol = currentHead.getCol();
@@ -82,7 +115,9 @@ public class Snake {
 	            case "RIGHT": newCol++; break;
 	        }
 	        return new Position(newRow, newCol);  // Trả về vị trí mới của đầu rắn
+	        
         }
+       
         switch (currentDirection) {
 	        case "UP":
 	        	if(newRow-1<0) {

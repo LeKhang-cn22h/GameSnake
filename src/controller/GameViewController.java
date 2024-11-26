@@ -88,13 +88,15 @@ public class GameViewController {
     @FXML
     private AudioClip eatSound;
     private AudioClip gameOverSound;
+    private AudioClip moveSound;
+    @FXML
     private ImageView imgWeather = new ImageView();
     
     public GameViewController() {
         initializeSounds();  // Gọi phương thức này trong constructor
     }
    //test trong SnakeHead
-
+    
     @FXML
     public void initialize() {
     	APIWeatherTime();
@@ -130,6 +132,7 @@ public class GameViewController {
         // Đặt focus vào gameGrid và đăng ký sự kiện bàn phím sau khi Scene đã được khởi tạo
         Platform.runLater(() -> {
             gameGrid.getScene().setOnKeyPressed(event -> {
+
                 switch (event.getCode()) {
                     case UP: snake.changeDirection("UP"); break;
                     case DOWN: snake.changeDirection("DOWN"); break;
@@ -139,9 +142,12 @@ public class GameViewController {
                 }
             });
             gameGrid.requestFocus();  // Đảm bảo nhận sự kiện bàn phím
+            
+           
         });
         // Tạo và bắt đầu thread để tự động di chuyển rắn
         startGameThread();
+        
     }
     
     private void APIWeatherTime() {
@@ -238,6 +244,7 @@ public class GameViewController {
             }
         }
         
+        
      // Duyệt qua tất cả các vị trí của cơ thể rắn
         for (int i = 0; i < snake.getBody().size(); i++) {
             Position position = snake.getBody().get(i);
@@ -245,21 +252,22 @@ public class GameViewController {
 
             if (i == 0) {
                 // Đầu rắn
-                String headImage = getClass().getResource("/view/image_codinh/up.jpg").toExternalForm();
+                String headImage = getClass().getResource("/view/image_snake/up.jpg").toExternalForm();
                 switch (snake.getCurrentDirection()) {
                     case "UP":
-                        headImage = getClass().getResource("/view/image_codinh/up.jpg").toExternalForm();
+                        headImage = getClass().getResource("/view/image_snake/up.jpg").toExternalForm();
                         break;
                     case "DOWN":
-                        headImage = getClass().getResource("/view/image_codinh/down.jpg").toExternalForm();
+                        headImage = getClass().getResource("/view/image_snake/down.jpg").toExternalForm();
                         break;
                     case "LEFT":
-                        headImage =getClass().getResource("/view/image_codinh/left.jpg").toExternalForm();
+                        headImage =getClass().getResource("/view/image_snake/left.jpg").toExternalForm();
                         break;
                     case "RIGHT":
-                        headImage = getClass().getResource("/view/image_codinh/right.jpg").toExternalForm();
+                        headImage = getClass().getResource("/view/image_snake/right.jpg").toExternalForm();
                         break;
                 }
+               
                 button.setStyle("-fx-background-image:url(' " + headImage + "'); " +
                                 "-fx-background-size: cover; " +
                                 "-fx-background-position: center;");
@@ -267,8 +275,10 @@ public class GameViewController {
                 // Thân rắn
                 button.setStyle("-fx-background-color: " + colorSnake + ";");
             }
+           
         }
-
+        
+        
         
     }
 
@@ -277,19 +287,19 @@ public class GameViewController {
         String imageUrl;
         switch (food.getType()) {
             case NORMAL:
-                imageUrl = getClass().getResource("/view/image_codinh/dua_hau.png").toExternalForm();
+                imageUrl = getClass().getResource("/view/image_moi/dua_hau.png").toExternalForm();
                 break;
             case SLOW:
-                imageUrl = getClass().getResource("/view/image_codinh/dautay.jpg").toExternalForm();
+                imageUrl = getClass().getResource("/view/image_moi/dautay.jpg").toExternalForm();
                 break;
             case SPEED:
-                imageUrl = getClass().getResource("/view/image_codinh/traitao.jpg").toExternalForm();
+                imageUrl = getClass().getResource("/view/image_moi/traitao.jpg").toExternalForm();
                 break;
             case QUIZZ:
-                imageUrl = getClass().getResource("/view/image_codinh/traitim.jpg").toExternalForm();
+                imageUrl = getClass().getResource("/view/image_moi/traitim.jpg").toExternalForm();
                 break;
             default:
-                imageUrl = getClass().getResource("/view/image_codinh/default_food.png").toExternalForm();
+                imageUrl = getClass().getResource("/view/image_moi/default_food.png").toExternalForm();
         }
 
         Button foodButton = (Button) gameGrid.getChildren().get(
@@ -325,6 +335,7 @@ public class GameViewController {
             case LEFT: snake.changeDirection("LEFT"); break;
             case RIGHT: snake.changeDirection("RIGHT"); break;
             default: break;
+            
         }
     }
 
@@ -353,6 +364,7 @@ public class GameViewController {
         });
         gameThread.setDaemon(true);
         gameThread.start();
+        
     }
     @FXML
     private void pauseGame() {
@@ -367,12 +379,12 @@ public class GameViewController {
             final int[] countdown = {3}; // Số giây đếm ngược
 
             // Hiệu ứng scale (phóng to) cho Label
-            ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.5), countdownLabel);
+            ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.65), countdownLabel);
             scaleTransition.setFromX(0); // Bắt đầu từ kích thước nhỏ
             scaleTransition.setFromY(0); // Bắt đầu từ kích thước nhỏ
-            scaleTransition.setToX(1);   // Kích thước cuối cùng
-            scaleTransition.setToY(1);   // Kích thước cuối cùng
-            scaleTransition.setCycleCount(1);
+            scaleTransition.setToX(2);   // Kích thước cuối cùng
+            scaleTransition.setToY(2);   // Kích thước cuối cùng
+            scaleTransition.setCycleCount(2);
 
             // Hiệu ứng fade (mờ dần)
             FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), countdownLabel);
@@ -458,7 +470,7 @@ public class GameViewController {
             
             if (modeGame == 4) {
                 if (food.getType().getEffect() instanceof QuizFoodEffect) {
-                    isPaused = true;
+                    pauseGame();
                     ((QuizFoodEffect) food.getType().getEffect()).setGameViewController(this);
                 }
             }
@@ -490,7 +502,7 @@ public class GameViewController {
     
     private void initializeSounds() {
         // Âm thanh khi ăn mồi
-        URL eatResource = getClass().getResource("/view/image_codinh/AnMoi.ogg");
+        URL eatResource = getClass().getResource("/view/music/AnMoi.ogg");
         if (eatResource != null) {
             eatSound = new AudioClip(eatResource.toString());
         } else {
@@ -498,13 +510,36 @@ public class GameViewController {
         }
 
         // Âm thanh khi game over
-        URL gameOverResource = getClass().getResource("/view/image_codinh/Chet.ogg");
+        URL gameOverResource = getClass().getResource("/view/music/Chet.ogg");
         if (gameOverResource != null) {
             gameOverSound = new AudioClip(gameOverResource.toString());
         } else {
             System.out.println("Không tìm thấy file âm thanh khi game over! Kiểm tra lại đường dẫn.");
         }
+//        URL moveResource = getClass().getResource("/view/image_codinh/SoundMove.ogg");
+//        if (moveResource != null) {
+//            System.out.println("Path to move sound: " + moveResource); // Kiểm tra đường dẫn
+//            moveSound = new AudioClip(moveResource.toExternalForm());
+//        } else {
+//            System.out.println("Không tìm thấy file âm thanh di chuyển! Kiểm tra lại đường dẫn.");
+//        } 
     }
+
+//    private void SnakeMove() {
+//        System.out.println("SnakeMove được gọi");
+//        if (moveSound != null) {
+//            System.out.println("moveSound không null");
+//            if (!moveSound.isPlaying()) {
+//                moveSound.play();
+//                System.out.println("Đã phát âm thanh di chuyển");
+//            } else {
+//                System.out.println("Âm thanh đang phát, không phát lại");
+//            }
+//        } else {
+//            System.out.println("moveSound chưa được khởi tạo");
+//        }
+//    }
+        
 
 
     private void playEatSound() {
@@ -520,6 +555,8 @@ public class GameViewController {
             gameOverSound.play();  // Phát âm thanh khi game over
         }
     }
+   
+    
  
 
 
