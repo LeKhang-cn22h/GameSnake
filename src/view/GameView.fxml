@@ -62,7 +62,10 @@
                      <children>
                         <ImageView fx:id="imgGame" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />                            
                             <GridPane fx:id="gameGrid" alignment="CENTER" hgap="1" style="-fx-border-color: green;" vgap="1" />
+                            <VBox alignment="CENTER" spacing="10">
 <Label fx:id="countdownLabel" alignment="CENTER" style="-fx-font-size: 40px; -fx-text-fill: red;" text="" visible="false" />
+<Label fx:id="directionLabel" alignment="CENTER" style="-fx-font-size: 30px; -fx-text-fill: blue;" text="" visible="false" />
+</VBox>
                      </children>
                   </StackPane>
                   </children>

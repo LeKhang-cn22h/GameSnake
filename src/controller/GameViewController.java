@@ -1,10 +1,22 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+
+import DAO.APIClient;
+import DAO.ScoreDAO;
+import DAO.WeatherParser;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -14,39 +26,29 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.*;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import java.net.URL;
-import javafx.scene.media.AudioClip;
-
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.util.Duration;
-import javafx.animation.ScaleTransition;
-
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import DAO.APIClient;
-import DAO.ScoreDAO;
-import DAO.WeatherParser;
+import model.Food;
+import model.FoodFactory;
+import model.GameConfig;
+import model.GameState;
+import model.Obstacle;
+import model.Position;
+import model.QuizFoodEffect;
+import model.Score;
+import model.Snake;
 
 public class GameViewController {
 	private List<Position> ob = Obstacle.map1;
@@ -57,6 +59,9 @@ public class GameViewController {
 	private Position newHead;
 	@FXML
 	private Label labelRecord;
+	@FXML
+	private Label directionLabel; // Label hiển thị hướng di chuyển của rắn
+
 	@FXML
     private Label countdownLabel;
 	@FXML
@@ -93,9 +98,8 @@ public class GameViewController {
     private AudioClip moveSound;
     @FXML
     private ImageView imgWeather = new ImageView();
-    private String headImage;
     private String obImage;
-    
+
     public GameViewController() {
         initializeSounds();  // Gọi phương thức này trong constructor
     }
@@ -153,7 +157,8 @@ public class GameViewController {
         startGameThread();
         
     }
-    
+ 
+
     private void APIWeatherTime() {
         try {
             // Lấy dữ liệu thời tiết
@@ -287,6 +292,7 @@ public class GameViewController {
                     	pauseGame();
                  	   reset();
                  	   resumeGame();
+;
                     }else	addOb();
 
                 }
@@ -303,19 +309,19 @@ public class GameViewController {
 
             if (i == 0) {
                 // Đầu rắn
-                headImage = getClass().getResource("/view/image_snake/up.jpg").toExternalForm();
+                String headImage = getClass().getResource("/view/image_snake/up.png").toExternalForm();
                 switch (snake.getCurrentDirection()) {
                     case "UP":
-                        headImage = getClass().getResource("/view/image_snake/up.jpg").toExternalForm();
+                        headImage = getClass().getResource("/view/image_snake/up.png").toExternalForm();
                         break;
                     case "DOWN":
-                        headImage = getClass().getResource("/view/image_snake/down.jpg").toExternalForm();
+                        headImage = getClass().getResource("/view/image_snake/down.png").toExternalForm();
                         break;
                     case "LEFT":
-                        headImage =getClass().getResource("/view/image_snake/left.jpg").toExternalForm();
+                        headImage =getClass().getResource("/view/image_snake/left.png").toExternalForm();
                         break;
                     case "RIGHT":
-                        headImage = getClass().getResource("/view/image_snake/right.jpg").toExternalForm();
+                        headImage = getClass().getResource("/view/image_snake/right.png").toExternalForm();
                         break;
                 }
                
@@ -339,13 +345,13 @@ public class GameViewController {
                 imageUrl = getClass().getResource("/view/image_moi/dua_hau.png").toExternalForm();
                 break;
             case SLOW:
-                imageUrl = getClass().getResource("/view/image_moi/dautay.jpg").toExternalForm();
+                imageUrl = getClass().getResource("/view/image_moi/dautay.png").toExternalForm();
                 break;
             case SPEED:
-                imageUrl = getClass().getResource("/view/image_moi/traitao.jpg").toExternalForm();
+                imageUrl = getClass().getResource("/view/image_moi/traitao.png").toExternalForm();
                 break;
             case QUIZZ:
-                imageUrl = getClass().getResource("/view/image_moi/traitim.jpg").toExternalForm();
+                imageUrl = getClass().getResource("/view/image_moi/traitim.png").toExternalForm();
                 break;
             default:
                 imageUrl = getClass().getResource("/view/image_moi/default_food.png").toExternalForm();
@@ -422,51 +428,54 @@ public class GameViewController {
     @FXML
     private void resumeGame() {
         if (isPaused) {
-            // Hiển thị Label đếm ngược và bắt đầu đếm
             countdownLabel.setVisible(true);
-            final int[] countdown = {3}; // Số giây đếm ngược
+            directionLabel.setVisible(true); // Hiển thị Label hướng di chuyển
+            final int[] countdown = {3};
 
-            // Hiệu ứng scale (phóng to) cho Label
             ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(0.65), countdownLabel);
-            scaleTransition.setFromX(0); // Bắt đầu từ kích thước nhỏ
-            scaleTransition.setFromY(0); // Bắt đầu từ kích thước nhỏ
-            scaleTransition.setToX(2);   // Kích thước cuối cùng
-            scaleTransition.setToY(2);   // Kích thước cuối cùng
+            scaleTransition.setFromX(0);
+            scaleTransition.setFromY(0);
+            scaleTransition.setToX(2);
+            scaleTransition.setToY(2);
             scaleTransition.setCycleCount(2);
 
-            // Hiệu ứng fade (mờ dần)
             FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.5), countdownLabel);
-            fadeTransition.setFromValue(1.0); // Bắt đầu từ độ mờ hoàn toàn
-            fadeTransition.setToValue(0.0);   // Mờ dần đến 0
+            fadeTransition.setFromValue(1.0);
+            fadeTransition.setToValue(0.0);
             fadeTransition.setCycleCount(1);
 
-            // Timeline để thực hiện đếm ngược
             Timeline timeline = new Timeline();
             timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> {
-                countdownLabel.setText(String.valueOf(countdown[0])); // Cập nhật giao diện
+                countdownLabel.setText(String.valueOf(countdown[0]));
                 countdown[0]--;
 
-                // Áp dụng hiệu ứng mỗi lần đếm ngược
-                scaleTransition.play();  // Hiệu ứng phóng to
-                fadeTransition.play();   // Hiệu ứng mờ dần
+                // Cập nhật hướng di chuyển của rắn
+                String currentDirection = snake.getCurrentDirection(); // Truy cập đối tượng Snake toàn cục
+                switch (currentDirection) {
+                    case "UP": directionLabel.setText("⬆"); break;
+                    case "DOWN": directionLabel.setText("⬇"); break;
+                    case "LEFT": directionLabel.setText("⬅"); break;
+                    case "RIGHT": directionLabel.setText("➡"); break;
+                    default: directionLabel.setText("N/A"); break;
+                }
+
+                scaleTransition.play();
+                fadeTransition.play();
 
                 if (countdown[0] < 0) {
-                    // Kết thúc đếm ngược
                     timeline.stop();
-                    countdownLabel.setText("Bắt đầu"); // Hiển thị chữ "Bắt đầu"
+                    countdownLabel.setText("Bắt đầu");
 
-                    // Áp dụng hiệu ứng fade cho chữ "Bắt đầu"
                     FadeTransition startFadeTransition = new FadeTransition(Duration.seconds(0.5), countdownLabel);
                     startFadeTransition.setFromValue(0.0);
                     startFadeTransition.setToValue(1.0);
-                    startFadeTransition.play(); // Hiển thị chữ "Bắt đầu"
+                    startFadeTransition.play();
 
-                    // Đảm bảo Label không bị ẩn quá sớm
                     startFadeTransition.setOnFinished(event1 -> {
-                        // Ẩn Label sau khi đếm ngược
-                        countdownLabel.setVisible(false); // Ẩn Label đếm ngược
-                        isPaused = false; // Tiếp tục trò chơi
-                        gameGrid.requestFocus(); // Lấy lại focus cho GridPane
+                        countdownLabel.setVisible(false);
+                        directionLabel.setVisible(false); // Ẩn Label hướng
+                        isPaused = false;
+                        gameGrid.requestFocus();
                         System.out.println("Game Resumed");
                     });
                 }
@@ -476,6 +485,9 @@ public class GameViewController {
             timeline.play();
         }
     }
+
+
+
 
 
 
@@ -565,33 +577,7 @@ public class GameViewController {
             gameOverSound = new AudioClip(gameOverResource.toString());
         } else {
             System.out.println("Không tìm thấy file âm thanh khi game over! Kiểm tra lại đường dẫn.");
-        }
-//        URL moveResource = getClass().getResource("/view/image_codinh/SoundMove.ogg");
-//        if (moveResource != null) {
-//            System.out.println("Path to move sound: " + moveResource); // Kiểm tra đường dẫn
-//            moveSound = new AudioClip(moveResource.toExternalForm());
-//        } else {
-//            System.out.println("Không tìm thấy file âm thanh di chuyển! Kiểm tra lại đường dẫn.");
-//        } 
-    }
-
-//    private void SnakeMove() {
-//        System.out.println("SnakeMove được gọi");
-//        if (moveSound != null) {
-//            System.out.println("moveSound không null");
-//            if (!moveSound.isPlaying()) {
-//                moveSound.play();
-//                System.out.println("Đã phát âm thanh di chuyển");
-//            } else {
-//                System.out.println("Âm thanh đang phát, không phát lại");
-//            }
-//        } else {
-//            System.out.println("moveSound chưa được khởi tạo");
-//        }
-//    }
-        
-
-
+        }}
     private void playEatSound() {
         if (eatSound != null) {
             System.out.println("Đang phát âm thanh ăn mồi...");
@@ -605,21 +591,12 @@ public class GameViewController {
             gameOverSound.play();  // Phát âm thanh khi game over
         }
     }
-   
-    
- 
-
-
-
-
     public void startQuiz() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/QuizView.fxml"));
         try {
             Parent quizRoot = loader.load();
             QuestionController questionController = loader.getController();
             questionController.setGameViewController(this); // Truyền GameViewController vào QuestionController
-       
-
             // Thiết lập giao diện dưới dạng modal
             Stage quizStage = new Stage();
             quizStage.setTitle("Câu hỏi");
@@ -628,15 +605,16 @@ public class GameViewController {
             quizStage.initModality(Modality.APPLICATION_MODAL);
             quizStage.setScene(new Scene(quizRoot));
             quizStage.showAndWait();
+            imagePause();
             resumeGame();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-
-
-    private void spawnFood() {
+    private void imagePause() {
+		snake.getBody();
+	}
+	private void spawnFood() {
         int row, col;
         do {
             row = random.nextInt(gameConfig.getMapSize());
@@ -673,10 +651,8 @@ public class GameViewController {
         alertend.setContentText("Bạn có chắc muốn chơi lại ván mới?");
         ButtonType buttonPlayAgain = new ButtonType("Chơi lại");
         ButtonType buttonExit = new ButtonType("Đóng",ButtonType.CLOSE.getButtonData());
-
         alertend.getButtonTypes().setAll(buttonPlayAgain, buttonExit);
         Optional<ButtonType> result = alertend.showAndWait();
-
         if (result.isPresent() && result.get() == buttonPlayAgain) {
         	initialize();
         }
@@ -689,17 +665,13 @@ public class GameViewController {
         int diem=score.getCurrentScore();
         new ScoreDAO().saveScore(diem, username,modeGame);
         // Hiển thị thông báo kết thúc game
-        
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Kết thúc trò chơi");
         alert.setHeaderText(message);
         alert.setContentText("Bạn có muốn chơi lại hay thoát?");
-
         ButtonType buttonPlayAgain = new ButtonType("Chơi lại");
         ButtonType buttonExit = new ButtonType("Thoát");
-
         alert.getButtonTypes().setAll(buttonPlayAgain, buttonExit);
-
         // Hiển thị hộp thoại và chờ phản hồi của người dùng
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -718,7 +690,6 @@ public class GameViewController {
         alertMain.setContentText("Bạn có chắc chắn muốn trở về trang chủ ?");
         ButtonType buttonMain = new ButtonType("Có");
         ButtonType buttonExit = new ButtonType("Thoát",ButtonType.CLOSE.getButtonData());
-
         alertMain.getButtonTypes().setAll(buttonMain, buttonExit);
         Optional<ButtonType> result = alertMain.showAndWait();
         if (result.isPresent() && result.get() == buttonMain) {

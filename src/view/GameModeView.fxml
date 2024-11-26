@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ModeViewController">
+<AnchorPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ModeViewController">
    <children>
-      <Pane prefHeight="500.0" prefWidth="700.0">
+      <Pane prefHeight="560.0" prefWidth="700.0">
          <children>
             <VBox layoutX="47.0" layoutY="39.0" prefHeight="166.0" prefWidth="215.0">
                <children>
