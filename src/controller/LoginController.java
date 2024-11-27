@@ -36,15 +36,14 @@ public class LoginController {
     @FXML
     private void handleLogin() {
         String username = txtUsername.getText();
-        String password = txtPassword.getText();
-        String passwordShow = txtPassShow.getText();
-
-        if (checkLogin(username, password) && checkLogin(username, passwordShow)) {
+        String password = txtPassword.isVisible() ? txtPassword.getText() : txtPassShow.getText();
+        if (checkLogin(username, password)) {
             saveUserToFile(username); // Lưu tên người dùng vào file
             proceedToGame(); // Chuyển sang màn hình game
         } else {
             showAlert("Đăng nhập thất bại", "Tên người dùng hoặc mật khẩu không đúng");
         }
+
     }
 
     private boolean checkLogin(String username, String password) {
@@ -126,18 +125,14 @@ public class LoginController {
 
     @FXML
     private void handleShowHide() {
-        if (txtPassword.isVisible()) {
-            // Hiển thị mật khẩu
-            txtPassword.setVisible(false);
-            txtPassShow.setVisible(true);
-            txtPassShow.setText(txtPassword.getText());
+        boolean isPasswordVisible = txtPassword.getSkin() instanceof javafx.scene.control.skin.TextFieldSkin;
+        if (isPasswordVisible) {
+            txtPassword.setSkin(null);
             btnShowHide.setText("Hide");
         } else {
-            // Ẩn mật khẩu
-            txtPassword.setVisible(true);
-            txtPassShow.setVisible(false);
-            txtPassword.setText(txtPassShow.getText());
+            txtPassword.setSkin(new javafx.scene.control.skin.TextFieldSkin(txtPassword));
             btnShowHide.setText("Show");
         }
     }
+
 }
