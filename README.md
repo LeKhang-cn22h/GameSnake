@@ -60,18 +60,17 @@
 
 ## 🗺️ Lộ trình phát triển
 
-- [x] **v0.1 - Test**
+- [x] **v1.0 - Test**
   - [x] Hệ thống điều khiển cơ bản.  
   - [x] Hệ thống mồi và chướng ngại vật cơ bản.  
   - [x] Lưu điểm số vào cơ sở dữ liệu.
-- [x] **v0.2 - Beta** (**_phiên bản hiện tại_**)
+- [x] **v2.0 - Beta** (**_phiên bản hiện tại_**)
   - [x] Chế độ chơi đa dạng: Cổ điển, Tự do, Chướng ngại vật, Thử thách.  
   - [x] Bảng xếp hạng và tính năng Multiplayer.  
   - [x] Hiển thị thông tin thời tiết ngoài trời.  
   - [x] Thêm các loại mồi mới: **NORMAL**, **SLOW**, **SPEED**, **QUIZZ**.
-- [ ] **v1.0 - Phiên bản chính thức**
+- [ ] **v3.0 - Phiên bản chính thức**
   - [ ] Tính năng Multiplayer.  
-  - [ ] Âm thanh và hiệu ứng đồ họa sống động.  
   - [ ] Tích hợp AI vào chướng ngại vật.
 ---
 
@@ -89,11 +88,13 @@ Chúng tôi luôn chào đón sự đóng góp từ cộng đồng! Hãy làm th
 
 ## 👥 Team phát triển
 
-- 🐍 **Rắn Developer, Health Bar**: Ngô Xuân Diệu.  
-- 💥 **Chướng Ngại Developer, Menu**: Vũ Nguyễn Phương.  
-- 🎨🎮 **Leader, Art and Game Director**: Mai Nguyễn Đăng Khoa.  
-- 🖥️ **Game Features**: Nguyễn Hồng Tồn.
+- 🌤️ **API Thời tiết, Tùy chỉnh (Màu rắn và nền map), Va chạm với chướng ngại, File, Xử lý dữ liệu bảng điểm**: Nguyễn Thành Đạt.  
+- 🐍🍎  **Dựng map và rắn, Mồi với di chuyển, Ăn, Va chạm với mồi, thân, và tường, Xử lý dữ liệu câu hỏi**: Lê Tuấn Khang.  
+- 🖌️📊 **Thiết kế giao diện (Đăng nhập, Đăng ký, Hướng dẫn, Trang chủ, Bảng xếp hạng, Chế độ), Âm thanh, Hình ảnh, Tốc độ rắn, Hiệu ứng ăn mồi, Xử lý dữ liệu tài khoản**: Hồ Huỳnh Nhu.  
 
+## 📞 Thông tin liên hệ
+
+- 📧 **Email**: nguyenthanhdat121204@gmail.com
 ---
 
-**Made by Nhóm 1 ❤️**
+<center>**Made by Nhóm 1 ❤️**</center>
