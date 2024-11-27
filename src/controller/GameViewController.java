@@ -246,15 +246,15 @@ public class GameViewController {
 	}
 	
 	private void reset() {
-		
+		snake = new Snake(10, 10, gameConfig);
+		newHead = new Position(10,10);
         addOb();
         checkMap=false;
 	}
 	
 	private boolean checkChangeMap() {
 		if(score.getCurrentScore()==100 || score.getCurrentScore()==200 || score.getCurrentScore()==300 || score.getCurrentScore()==400) {
-			snake = new Snake(10, 10, gameConfig);
-			newHead = new Position(10,10);
+
 			System.out.println("set snake");
 			return true;
 		}
@@ -306,38 +306,39 @@ public class GameViewController {
         for (int i = 0; i < snake.getBody().size(); i++) {
             Position position = snake.getBody().get(i);
             Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
-
-            if (i == 0) {
-                // Đầu rắn
-                String headImage = getClass().getResource("/view/image_snake/up.png").toExternalForm();
-                switch (snake.getCurrentDirection()) {
-                    case "UP":
-                        headImage = getClass().getResource("/view/image_snake/up.png").toExternalForm();
-                        break;
-                    case "DOWN":
-                        headImage = getClass().getResource("/view/image_snake/down.png").toExternalForm();
-                        break;
-                    case "LEFT":
-                        headImage =getClass().getResource("/view/image_snake/left.png").toExternalForm();
-                        break;
-                    case "RIGHT":
-                        headImage = getClass().getResource("/view/image_snake/right.png").toExternalForm();
-                        break;
-                }
-               
-                button.setStyle("-fx-background-image:url(' " + headImage + "'); " +
-                                "-fx-background-size: cover; " +
-                                "-fx-background-position: center;");
-            } else {
+        	drawHead();
+            if(i!=0){
                 // Thân rắn
                 button.setStyle("-fx-background-color: " + colorSnake + ";");
             }
-           
         }
         System.out.println("vẽ xong");
     }
 
 
+    private void drawHead() {
+    	Position position = snake.getBody().get(0);
+        Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
+            // Đầu rắn
+            String headImage = getClass().getResource("/view/image_snake/up.png").toExternalForm();
+            switch (snake.getCurrentDirection()) {
+                case "UP":
+                    headImage = getClass().getResource("/view/image_snake/up.png").toExternalForm();
+                    break;
+                case "DOWN":
+                    headImage = getClass().getResource("/view/image_snake/down.png").toExternalForm();
+                    break;
+                case "LEFT":
+                    headImage =getClass().getResource("/view/image_snake/left.png").toExternalForm();
+                    break;
+                case "RIGHT":
+                    headImage = getClass().getResource("/view/image_snake/right.png").toExternalForm();
+                    break;
+            }
+            button.setStyle("-fx-background-image:url(' " + headImage + "'); " +
+                            "-fx-background-size: cover; " +
+                            "-fx-background-position: center;");
+    }
     private void drawFood() {
         String imageUrl;
         switch (food.getType()) {
@@ -403,8 +404,10 @@ public class GameViewController {
 //                    	APIWeatherTime();
                         checkCollision();
                         snake.move(newHead);
+                        
                         drawSnake();
                         drawFood();
+                        drawHead();
                         snake.updateDirectionAfterMove();
                     });
                 }
@@ -427,6 +430,7 @@ public class GameViewController {
 
     @FXML
     private void resumeGame() {
+    	
         if (isPaused) {
             countdownLabel.setVisible(true);
             directionLabel.setVisible(true); // Hiển thị Label hướng di chuyển
