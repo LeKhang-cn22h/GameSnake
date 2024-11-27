@@ -24,8 +24,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-public class MenuViewController {
 
+public class MenuViewController {
 
     @FXML
     private Label playerLabel;
@@ -34,8 +34,9 @@ public class MenuViewController {
     private MediaPlayer mediaPlayer;
     private MediaPlayer menuMediaPlayer;
     @FXML
-	private BorderPane borderPane=new BorderPane();
-    // Phương thức đọc tên người dùng từ file
+    private BorderPane borderPane = new BorderPane();
+
+    // Đọc tên người dùng từ file
     private String readUsernameFromFile() {
         File file = new File("user.txt");
         String username = "Player"; // Mặc định nếu không tìm thấy file
@@ -53,7 +54,7 @@ public class MenuViewController {
         this.menuMediaPlayer = mediaPlayer;
     }
 
-    // Phương thức để phát nhạc menu
+    // Phát nhạc menu
     public void playMenuMusic() {
         if (menuMediaPlayer != null) {
             menuMediaPlayer.play();
@@ -64,59 +65,55 @@ public class MenuViewController {
     private void initialize() {
         String username = readUsernameFromFile();
         playerLabel.setText(username); // Cập nhật tên người dùng vào Label
-        String imagePath = getClass().getResource("/view/image_nen/nen.gif").toExternalForm(); // Đường dẫn hình ảnh
-        borderPane.setStyle("-fx-background-image:url(' " + imagePath + "'); " +
+        String imagePath = getClass().getResource("/view/image_nen/nen.gif").toExternalForm(); // Đường dẫn hình ảnh nền
+        borderPane.setStyle("-fx-background-image:url('" + imagePath + "'); " +
                 "-fx-background-size: cover; " +
                 "-fx-background-position: center;");
+        
         // Khởi tạo Media và MediaPlayer
-        // Chú ý: Đảm bảo đường dẫn đúng, sử dụng "toExternalForm()" để lấy đường dẫn đúng khi tải từ resources
         Media media = new Media(getClass().getResource("/view/music/NhacNen.ogg").toExternalForm());
-        // Kiểm tra lỗi khi tải Media
         if (media.getError() != null) {
-            System.out.println("Error loading media: " + media.getError().getMessage());
+            System.out.println("Lỗi khi tải media: " + media.getError().getMessage());
         }
         
-        // Kiểm tra xem MediaPlayer có được khởi tạo thành công không
         if (media.getError() == null) {
             mediaPlayer = new MediaPlayer(media);
             
-            // Đảm bảo MediaPlayer đã được khởi tạo
             if (mediaPlayer != null) {
                 mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Phát nhạc liên tục
                 mediaPlayer.setVolume(1.0); // Đảm bảo âm lượng tối đa
                 mediaPlayer.setOnError(() -> {
-                    System.out.println("Error in MediaPlayer: " + mediaPlayer.getError().getMessage());
+                    System.out.println("Lỗi trong MediaPlayer: " + mediaPlayer.getError().getMessage());
                 });
                 mediaPlayer.play(); // Bắt đầu phát nhạc
             } else {
-                System.out.println("Failed to initialize MediaPlayer.");
+                System.out.println("Không thể khởi tạo MediaPlayer.");
             }
         } else {
-            System.out.println("Error: Media file could not be loaded.");
+            System.out.println("Lỗi: Không thể tải tệp Media.");
         }
     }
 
-
     @FXML
     private void logout(ActionEvent event) {
-    	mediaPlayer.stop(); 
+        mediaPlayer.stop(); // Dừng nhạc nền khi đăng xuất
         Alert logoutAlert = new Alert(AlertType.CONFIRMATION);
         logoutAlert.setTitle("Thông báo");
         logoutAlert.setContentText("Bạn có chắc chắn muốn đăng xuất!");
-        
+
         ButtonType yesButton = new ButtonType("Có");
         ButtonType closeButton = new ButtonType("Đóng", ButtonType.CLOSE.getButtonData());
         logoutAlert.getButtonTypes().setAll(yesButton, closeButton);
 
         logoutAlert.showAndWait().ifPresent(response -> {
             if (response == yesButton) {
-                deleteData();  // Xóa dữ liệu trong file user.txt
-                switchToInterface(event);  // Chuyển về giao diện interface.fxml
+                deleteData();  // Xóa dữ liệu trong file
+                switchToInterface(event);  // Chuyển về giao diện menu
             }
         });
     }
 
-    // Phương thức xóa nội dung file user.txt
+    // Xóa nội dung trong file user.txt
     private void deleteData() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("user.txt"))) {
             writer.write("");  // Ghi chuỗi rỗng để xóa nội dung file
@@ -125,22 +122,20 @@ public class MenuViewController {
         }
     }
 
-    // Phương thức chuyển về giao diện interface.fxml
+    // Chuyển về giao diện menu (interface.fxml)
     @FXML
     private void switchToInterface(ActionEvent event) {
         try {
-            // Chuyển về giao diện menu (interface.fxml)
             Parent root = FXMLLoader.load(getClass().getResource("/view/interface.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
             stage.getIcons().add(new Image(getClass().getResource("/view/image_signLogin/SNAKE.png").toExternalForm()));
-
-            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void openGameView(ActionEvent event) {
         mediaPlayer.stop(); // Dừng nhạc nền khi bắt đầu game
@@ -157,12 +152,10 @@ public class MenuViewController {
             e.printStackTrace();
         }
     }
-   
 
     @FXML
-   
     private void openRankingView(ActionEvent event) {
-    	 mediaPlayer.stop();
+        mediaPlayer.stop(); // Dừng nhạc nền khi mở bảng xếp hạng
         try {
             // Tải FXML cho bảng xếp hạng
             Parent rankingViewRoot = FXMLLoader.load(getClass().getResource("/view/Leaderboard.fxml"));
@@ -172,14 +165,10 @@ public class MenuViewController {
             stage.setScene(new Scene(rankingViewRoot));
             stage.show();
             stage.getIcons().add(new Image(getClass().getResource("/view/image_signLogin/SNAKE.png").toExternalForm()));
-
-            // Tiếp tục phát nhạc nếu nó không đang phát
-            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
 
     @FXML
     private void showHelpDialog(ActionEvent event) {
@@ -187,16 +176,17 @@ public class MenuViewController {
         helpAlert.setTitle("Hướng dẫn chơi game Rắn săn mồi");
         helpAlert.setHeaderText("Cách chơi game Rắn săn mồi trên laptop");
         helpAlert.setContentText(
-        		"1.Game có nhiều chế độ để người chơi có thể khám phá!\n"+
+                "1.Game có nhiều chế độ để người chơi có thể khám phá!\n" +
                 "2. Dùng các phím mũi tên để điều khiển rắn:\n" +
                 "   - Lên (↑), Xuống (↓), Trái (←), Phải (→).\n" +
                 "3. Cố gắng ăn mồi để tăng điểm.\n" +
                 "4. Tránh va chạm vào thân rắn, tường hoặc chướng ngại vật(nếu có) để không bị thua.\n" +
-                " Game có 4 chế độ chơi:\n"
-                + " Chế độ 1: chế độ cổ điển\n"
-                +" Chế độ 2: Chế độ tự do\n"
-                +" Chế độ 3: Chế độ thử thách \n"
-                +" Chế độ 2: Chế độ vượt chướng ngại vật\n"+
+                "Game có 4 chế độ chơi:\n" +
+                "Chế độ 1: chế độ cổ điển\n" +
+                "Chế độ 2: Chế độ tự do\n" +
+                "Chế độ 3: Chế độ vượt chướng ngại vật\n" +
+                "Chế độ 4: Chế độ thử thách\n" +
+                
                 "Chúc bạn chơi game vui vẻ!"
         );
 
@@ -205,13 +195,14 @@ public class MenuViewController {
 
         helpAlert.showAndWait();
     }
+
     @FXML
     private void openSetting() {
         try {
-            // Tải fxml cho SettingController
+            // Tải FXML cho SettingController
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SettingView.fxml"));
             Parent root = loader.load();
-            // Tạo một cửa sổ mới
+            // Tạo cửa sổ mới cho cài đặt
             Stage newStage = new Stage();
             newStage.setTitle("Cài đặt");
             newStage.initModality(Modality.WINDOW_MODAL);
@@ -222,5 +213,4 @@ public class MenuViewController {
             e.printStackTrace();
         }
     }
-
 }

@@ -33,41 +33,47 @@ public class SignController {
     private UserDAO userDAO;
 
     public SignController() {
-        userDAO = new UserDAO(); // Khởi tạo UserDAO
+        userDAO = new UserDAO(); // Khởi tạo đối tượng UserDAO để xử lý các thao tác liên quan đến người dùng
     }
 
+    /**
+     * Xử lý sự kiện đăng ký người dùng mới
+     */
     @FXML
     private void handleRegister() {
         String username = txtUsername.getText();
         String password = txtPassword.getText();
         String confirmPassword = txtConfirmPassword.getText();
 
-        // Kiểm tra dữ liệu nhập vào
+        // Kiểm tra các trường thông tin nhập vào
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showAlert(AlertType.ERROR, "Lỗi", "Vui lòng điền đầy đủ thông tin.");
             return;
         }
 
+        // Kiểm tra độ dài mật khẩu
         if (password.length() < 6) {
             showAlert(AlertType.ERROR, "Lỗi", "Mật khẩu cần ít nhất 6 kí tự!");
             return;
         }
 
+        // Kiểm tra mật khẩu xác nhận có khớp không
         if (!password.equals(confirmPassword)) {
             showAlert(AlertType.ERROR, "Lỗi", "Mật khẩu không khớp.");
             return;
         }
 
-        // Kiểm tra username đã tồn tại
+        // Kiểm tra xem username đã tồn tại chưa
         if (userDAO.checkUsernameExists(username)) {
             showAlert(AlertType.ERROR, "Lỗi", "Username này đã tồn tại! Vui lòng đặt tên khác.");
             return;
         }
 
-        // Thêm người dùng mới
+        // Tạo đối tượng User mới và lưu vào cơ sở dữ liệu
         User newUser = new User(username, password);
         int result = userDAO.insert(newUser);
 
+        // Kiểm tra kết quả đăng ký
         if (result > 0) {
             showAlert(AlertType.INFORMATION, "Thành công", "Đăng ký thành công! Vui lòng đăng nhập.");
             handleLogin(); // Điều hướng về trang Đăng nhập
@@ -76,10 +82,13 @@ public class SignController {
         }
     }
 
-    // Phương thức điều hướng về trang Đăng nhập
+    /**
+     * Xử lý sự kiện đăng nhập, chuyển đến giao diện đăng nhập
+     */
     @FXML
     private void handleLogin() {
         try {
+            // Tải giao diện đăng nhập
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/interface.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnLogin.getScene().getWindow();
@@ -91,6 +100,12 @@ public class SignController {
         }
     }
 
+    /**
+     * Hiển thị thông báo lỗi hoặc thành công
+     * @param alertType Loại thông báo (ERROR, INFORMATION, ...)
+     * @param title Tiêu đề thông báo
+     * @param message Nội dung thông báo
+     */
     private void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

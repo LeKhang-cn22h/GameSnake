@@ -20,6 +20,8 @@ public class Score {
 	public void resetScore() {
 		this.currentScore=0;
 	}
+	
+	// Tăng điểm theo tốc độ của rắn
 	public void increaseScore() {
 	    double speed = SharedData.getSpeed(); // Lấy giá trị Speed từ SharedData
 	    if (speed == 100) {

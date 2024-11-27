@@ -1,12 +1,13 @@
 package model;
 
 import controller.GameViewController;
+
 public class QuizFoodEffect implements FoodEffect {
     private GameViewController gameViewController;
 
     // Constructor mặc định
     public QuizFoodEffect() {
-        // Không làm gì ở đây
+        // Constructor mặc định không làm gì cả
     }
 
     // Constructor với tham số
@@ -14,6 +15,7 @@ public class QuizFoodEffect implements FoodEffect {
         this.gameViewController = gameViewController;
     }
 
+    // Phương thức setter để thiết lập gameViewController
     public void setGameViewController(GameViewController gameViewController) {
         this.gameViewController = gameViewController;
     }
@@ -29,4 +31,3 @@ public class QuizFoodEffect implements FoodEffect {
         }
     }
 }
-

@@ -24,52 +24,54 @@ import DAO.ScoreDAO;
 import model.Rank;
 
 public class RankingController {
-	@FXML
-	private Label labMode;
-	@FXML
-	private MenuButton menuMode;
-    @FXML
-    private Button btnBack;
-    @FXML
-    private TableView<Rank> tableView;
 
     @FXML
-    private TableColumn<Rank, Integer> rankColumn;
+    private Label labMode; // Nhãn hiển thị chế độ chơi hiện tại
     @FXML
-    private TableColumn<Rank, String> usernameColumn;
+    private MenuButton menuMode; // Menu để chọn chế độ chơi
     @FXML
-    private TableColumn<Rank, Integer> scoreColumn;
+    private Button btnBack; // Nút quay lại
     @FXML
-    private TableColumn<Rank, String> dateColumn;
+    private TableView<Rank> tableView; // Bảng xếp hạng
+
+    @FXML
+    private TableColumn<Rank, Integer> rankColumn; // Cột thứ hạng
+    @FXML
+    private TableColumn<Rank, String> usernameColumn; // Cột tên người chơi
+    @FXML
+    private TableColumn<Rank, Integer> scoreColumn; // Cột điểm số
+    @FXML
+    private TableColumn<Rank, String> dateColumn; // Cột ngày chơi
 
     private MediaPlayer rankingMediaPlayer; // MediaPlayer cho nhạc bảng xếp hạng
     private MediaPlayer menuMediaPlayer; // MediaPlayer cho nhạc menu
 
     /**
-     * Hàm khởi tạo bảng xếp hạng
+     * Hàm khởi tạo bảng xếp hạng, cài đặt các cột và phát nhạc nền.
      */
     @FXML
     private void initialize() {
-        // Cài đặt các cột
+        // Cài đặt các cột trong bảng
         rankColumn.setCellValueFactory(new PropertyValueFactory<>("rank"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        // Tạo MediaPlayer cho nhạc bảng xếp hạng và phát nhạc
+
+        // Tạo và phát nhạc nền cho bảng xếp hạng
         Media rankingMusic = new Media(getClass().getResource("/view/music/NhacNen.ogg").toString());
         rankingMediaPlayer = new MediaPlayer(rankingMusic);
-        rankingMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Lặp lại nhạc
+        rankingMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Lặp lại nhạc nền
         rankingMediaPlayer.play();
 
         // Dừng nhạc menu nếu có
         if (menuMediaPlayer != null) {
-            menuMediaPlayer.stop();
+            menuMediaPlayer.stop(); // Dừng nhạc menu
             System.out.println("Menu music stopped!");
         }
     }
 
     /**
-     * Truyền MediaPlayer cho nhạc menu khi vào bảng xếp hạng
+     * Truyền MediaPlayer của nhạc menu khi vào bảng xếp hạng.
      * @param mediaPlayer Đối tượng MediaPlayer của nhạc menu
      */
     public void setMenuMediaPlayer(MediaPlayer mediaPlayer) {
@@ -77,7 +79,7 @@ public class RankingController {
     }
 
     /**
-     * Xử lý sự kiện nút "Quay lại"
+     * Xử lý sự kiện khi người dùng nhấn nút "Quay lại".
      * @param event sự kiện ActionEvent
      */
     @FXML
@@ -85,16 +87,15 @@ public class RankingController {
         try {
             // Dừng nhạc bảng xếp hạng khi quay lại menu
             if (rankingMediaPlayer != null) {
-                rankingMediaPlayer.stop();
+                rankingMediaPlayer.stop(); // Dừng nhạc bảng xếp hạng
                 System.out.println("Ranking music stopped!");
             }
 
             // Chuyển cảnh về menu
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/menuView.fxml"));
             Parent root = loader.load();
-            
 
-            // Truyền MediaPlayer nhạc menu vào controller menu
+            // Truyền MediaPlayer của nhạc menu vào controller menu
             MenuViewController menuController = loader.getController();
             if (menuController != null) {
                 // Nếu có MediaPlayer của menu, phát lại nhạc menu
@@ -109,37 +110,43 @@ public class RankingController {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            
+            e.printStackTrace(); // In ra lỗi nếu có
         }
     }
+
+    /**
+     * Xử lý sự kiện khi người dùng chọn chế độ chơi từ menu.
+     * @param event sự kiện ActionEvent khi chọn chế độ
+     */
     @FXML
     private void getRanking(ActionEvent event) {
-    	MenuItem mode = (MenuItem) event.getSource();
-    	labMode.setText(mode.getText());
-    	menuMode.setText(mode.getText());
-    	int modeG = 1;
-		switch (mode.getText()) {
-		case "Cổ Điển":
-			modeG = 1;
-			break;
-		case "Tự Do":
-			modeG = 2;
-			break;
-		case "Chướng ngại":
-			modeG = 3;
-			break;
-		case "Thách thức":
-			modeG = 4;
-			break;
-		default:
-			modeG = 5;
-			break;
-		}
-        // Lấy dữ liệu từ cơ sở dữ liệu
-        ObservableList<Rank> ranks = FXCollections.observableArrayList(ScoreDAO.getInstance().getTopScores(10,modeG));
+        MenuItem mode = (MenuItem) event.getSource();
+        labMode.setText(mode.getText()); // Cập nhật nhãn chế độ
+        menuMode.setText(mode.getText()); // Cập nhật menu chế độ
 
-        // Gán dữ liệu vào bảng
+        int modeG = 1; // Mặc định chế độ là 1
+        switch (mode.getText()) {
+            case "Cổ Điển":
+                modeG = 1; // Chế độ Cổ Điển
+                break;
+            case "Tự Do":
+                modeG = 2; // Chế độ Tự Do
+                break;
+            case "Chướng ngại":
+                modeG = 3; // Chế độ Chướng ngại
+                break;
+            case "Thách thức":
+                modeG = 4; // Chế độ Thách thức
+                break;
+            default:
+                modeG = 5; // Mặc định nếu không phải chế độ trên
+                break;
+        }
+
+        // Lấy danh sách xếp hạng từ cơ sở dữ liệu theo chế độ đã chọn
+        ObservableList<Rank> ranks = FXCollections.observableArrayList(ScoreDAO.getInstance().getTopScores(10, modeG));
+
+        // Cập nhật bảng xếp hạng với dữ liệu lấy được
         tableView.setItems(ranks);
     }
 }
