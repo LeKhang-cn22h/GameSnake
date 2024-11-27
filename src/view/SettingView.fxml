@@ -1,21 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SettingController">
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SettingController">
    <children>
       <Pane layoutY="-7.0" prefHeight="236.0" prefWidth="252.0">
          <children>
-          <AnchorPane layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="229.0" prefWidth="252.0">
+          <AnchorPane layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="121.0" prefWidth="252.0" style="-fx-background-color: #FFFF99;">
                <children>
-                  <Label fx:id="labTitle" layoutX="98.0" layoutY="41.0" text="Đổi màu" />
-                  <Button fx:id="btnColorSnake" layoutX="91.0" layoutY="84.0" mnemonicParsing="false" onAction="#openColorBoard" prefHeight="31.0" prefWidth="71.0" text="Rắn" />
-                  <Button fx:id="btnBgrMap" layoutX="91.0" layoutY="136.0" mnemonicParsing="false" onAction="#openBgrBoard" prefHeight="31.0" prefWidth="71.0" text="Map" />
+                  <Label fx:id="labTitle" layoutX="96.0" layoutY="20.0" prefHeight="22.0" prefWidth="59.0" style="-fx-background-color: #FFFF99;" text="Đổi màu">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Label>
+                  <Button fx:id="btnColorSnake" layoutX="43.0" layoutY="54.0" mnemonicParsing="false" onAction="#openColorBoard" prefHeight="31.0" prefWidth="71.0" style="-fx-background-radius: 10; -fx-background-color: #CCFFCC;" text="Rắn">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
+                  <Button fx:id="btnBgrMap" layoutX="143.0" layoutY="54.0" mnemonicParsing="false" onAction="#openBgrBoard" prefHeight="31.0" prefWidth="71.0" style="-fx-background-radius: 10; -fx-background-color: #CCFFCC;" text="Map">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
                </children>
             </AnchorPane>
+         </children>
+      </Pane>
+      <Pane layoutY="125.0" prefHeight="104.0" prefWidth="252.0" style="-fx-background-color: #CCFFCC;">
+         <children>
+            <Slider fx:id="speedSlider" blockIncrement="100.0" layoutX="29.0" layoutY="68.0" majorTickUnit="100.0" max="300.0" min="100.0" minorTickCount="0" prefHeight="22.0" prefWidth="195.0" snapToTicks="true" value="200.0" />
+            <Label fx:id="labTitle1" layoutX="104.0" layoutY="3.0" prefHeight="22.0" prefWidth="59.0" text="Tốc độ" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="29.0" layoutY="35.0" prefHeight="22.0" prefWidth="195.0" text="Nhanh         Bình thường        Chậm" textAlignment="CENTER" textFill="#031ece">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>

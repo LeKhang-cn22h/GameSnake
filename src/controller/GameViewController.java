@@ -108,7 +108,7 @@ public class GameViewController {
     @FXML
     public void initialize() {
     	APIWeatherTime();
-        this.gameState = new GameState(200); // 200ms là tốc độ mặc định
+        this.gameState = new GameState(SharedData.getSpeed()); // 200ms là tốc độ mặc định
         newHead = new Position(10, 10);
     	modeGame = SharedData.getSelectedMode();
     	colorSnake = SharedData.getSelectedColor();
@@ -307,12 +307,21 @@ public class GameViewController {
             Position position = snake.getBody().get(i);
             Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
         	drawHead();
-            if(i!=0){
-                // Thân rắn
-                button.setStyle("-fx-background-color: " + colorSnake + ";");
+            if(i==snake.getBody().size()-1){
+                // Đuôi rắn
+            	button.setStyle(
+            			"-fx-background-color:  red; " + // Màu nền cho nút
+            		            "-fx-background-radius: 50%;" +              // Tạo nền hình tròn
+            		            "-fx-border-radius: 50%;"                    // Đảm bảo viền cũng bo tròn
+            		        
+            		);
+
+               
+            }else  if(i!=0) {
+            	button.setStyle("-fx-background-color: " + colorSnake + ";");
             }
+            
         }
-        System.out.println("vẽ xong");
     }
 
 
@@ -412,7 +421,7 @@ public class GameViewController {
                     });
                 }
                 try {
-                    Thread.sleep(gameState.getSnakeSpeed());  // Delay for snake movement
+                    Thread.sleep((long) gameState.getSnakeSpeed());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();  // Handle thread interruption
                     System.out.println("Game thread interrupted!");
@@ -529,7 +538,7 @@ public class GameViewController {
         	onFoodEaten(foodButton); // Gọi vào phương thức onFoodEaten với tham số là foodButton
 
             snake.grow(newHead);
-            score.increaseScore(10);
+            score.increaseScore();
             checkMap=checkChangeMap();
             System.out.println("Score increased, current score: " + score.getCurrentScore());  // Kiểm tra ở đây
             
@@ -568,7 +577,7 @@ public class GameViewController {
     
     private void initializeSounds() {
         // Âm thanh khi ăn mồi
-        URL eatResource = getClass().getResource("/view/music/AnMoi.ogg");
+        URL eatResource = getClass().getResource("/view/music/score.ogg");
         if (eatResource != null) {
             eatSound = new AudioClip(eatResource.toString());
         } else {
@@ -608,6 +617,8 @@ public class GameViewController {
             quizStage.initOwner(gameGrid.getScene().getWindow());
             quizStage.initModality(Modality.APPLICATION_MODAL);
             quizStage.setScene(new Scene(quizRoot));
+            QuestionController questionController2 = new QuestionController();
+			questionController2.playSound();
             quizStage.showAndWait();
             imagePause();
             resumeGame();

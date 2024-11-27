@@ -3,9 +3,10 @@ package controller;
 import javafx.scene.image.Image;
 
 public class SharedData {
-    private static String selectedColor = "yellow"; // Màu mặc định
+    private static String selectedColor = "#00FF00"; // Màu mặc định
     private static Image selectedBgr = null; // Màu mặc định
     private static int selectedMode = 1;
+    private static double Speed=200;
 
     public static String getSelectedColor() {
         return selectedColor;
@@ -14,7 +15,12 @@ public class SharedData {
     public static void setSelectedColor(String color) {
         selectedColor = color;
     }
-    
+    public static void setSpeed(double speed) {
+    	Speed=speed;
+    }
+    public static double getSpeed() {
+    	return Speed;
+    }
     public static Image getSelectedBgr() {
         return selectedBgr;
     }

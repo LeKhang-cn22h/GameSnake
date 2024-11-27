@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -32,7 +33,8 @@ public class MenuViewController {
     private Button startButton;
     private MediaPlayer mediaPlayer;
     private MediaPlayer menuMediaPlayer;
-
+    @FXML
+	private BorderPane borderPane=new BorderPane();
     // Phương thức đọc tên người dùng từ file
     private String readUsernameFromFile() {
         File file = new File("user.txt");
@@ -62,7 +64,10 @@ public class MenuViewController {
     private void initialize() {
         String username = readUsernameFromFile();
         playerLabel.setText(username); // Cập nhật tên người dùng vào Label
-        
+        String imagePath = getClass().getResource("/view/image_nen/nen.gif").toExternalForm(); // Đường dẫn hình ảnh
+        borderPane.setStyle("-fx-background-image:url(' " + imagePath + "'); " +
+                "-fx-background-size: cover; " +
+                "-fx-background-position: center;");
         // Khởi tạo Media và MediaPlayer
         // Chú ý: Đảm bảo đường dẫn đúng, sử dụng "toExternalForm()" để lấy đường dẫn đúng khi tải từ resources
         Media media = new Media(getClass().getResource("/view/music/NhacNen.ogg").toExternalForm());
@@ -187,6 +192,11 @@ public class MenuViewController {
                 "   - Lên (↑), Xuống (↓), Trái (←), Phải (→).\n" +
                 "3. Cố gắng ăn mồi để tăng điểm.\n" +
                 "4. Tránh va chạm vào thân rắn, tường hoặc chướng ngại vật(nếu có) để không bị thua.\n" +
+                " Game có 4 chế độ chơi:\n"
+                + " Chế độ 1: chế độ cổ điển\n"
+                +" Chế độ 2: Chế độ tự do\n"
+                +" Chế độ 3: Chế độ thử thách \n"
+                +" Chế độ 2: Chế độ vượt chướng ngại vật\n"+
                 "Chúc bạn chơi game vui vẻ!"
         );
 

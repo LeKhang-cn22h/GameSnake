@@ -1,18 +1,17 @@
 package model;
 
 public class GameState {
-    private int snakeSpeed;
+    private double snakeSpeed;
 
-    public GameState(int initialSpeed) {
+    public GameState(double initialSpeed) {
         this.snakeSpeed = initialSpeed;
     }
 
-    public int getSnakeSpeed() {
+    public double getSnakeSpeed() {
         return snakeSpeed;
     }
 
-    public void setSnakeSpeed(int snakeSpeed) {
+    public void setSnakeSpeed(double snakeSpeed) {
         this.snakeSpeed = snakeSpeed;
-        System.out.println("Snake speed updated to: " + snakeSpeed);
     }
 }

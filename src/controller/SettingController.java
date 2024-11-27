@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -36,7 +37,8 @@ public class SettingController {
 	private ImageView imgSelected;
 	@FXML
 	private Button btnBgrOk;
-	
+	@FXML 
+	private Slider speedSlider;
 	@FXML
 	private void openColorBoard() {
         try {
@@ -53,6 +55,16 @@ public class SettingController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+	}
+	@FXML
+	public void initialize() {
+	    // Đặt giá trị Slider từ SharedData khi mở giao diện
+	    speedSlider.setValue(SharedData.getSpeed());
+
+	    // Lưu giá trị Slider vào SharedData khi nó thay đổi
+	    speedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+	        SharedData.setSpeed(newValue.doubleValue());
+	    });
 	}
 	@FXML
 	private void openBgrBoard() {
@@ -112,4 +124,10 @@ public class SettingController {
         stage.close(); 
 	    return SharedData.getSelectedBgr();
 	}
+	@FXML
+	private void updateSpeed() {
+	    double speed = speedSlider.getValue(); // Lấy giá trị từ Slider
+	    SharedData.setSpeed(speed); // Cập nhật giá trị vào SharedData
+	}
+	
 }

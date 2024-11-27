@@ -5,9 +5,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+//import java.net.URI;
 import javafx.stage.Stage;
 import model.Question;
-
+//import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +29,11 @@ public class QuestionController {
     private Button btnOption1;
 
     @FXML
+    private AudioClip soundQuestion;
+    @FXML
     private Button btnOption2;
-
+    
+    private MediaPlayer mediaPlayer;
     @FXML
     private Button btnOption3;
 
@@ -38,7 +46,9 @@ public class QuestionController {
     private List<Question> questions;
     private int currentQuestionIndex = 0; // Chỉ số câu hỏi hiện tại
     private int score = 0; // Điểm số hiện tại
-
+    public QuestionController() {
+    	initializeSounds();
+    }
     public void initialize() {
         questions = new ArrayList<>();
         loadQuestionsFromDatabase();
@@ -75,6 +85,7 @@ public class QuestionController {
     }
 
     public void handleAnswer(int selectedOption) {
+    	
         Question question = questions.get(currentQuestionIndex);
         
         // Kiểm tra đáp án và cộng điểm nếu đúng
@@ -91,8 +102,47 @@ public class QuestionController {
         } else {
             displayRandomQuestions(); // Hiển thị câu hỏi tiếp theo
         }
+        
+    }
+    public void initializeSounds() {
+        // Lấy đường dẫn đến file âm thanh
+        try {
+            // Lấy URL của file âm thanh
+            URL soundQuestionURI = getClass().getResource("/view/music/tlCauHoi.ogg");
+
+            if (soundQuestionURI != null) {
+                // Tạo Media từ URL
+                Media soundQuestion = new Media(soundQuestionURI.toString());
+
+                // Tạo MediaPlayer từ Media
+                mediaPlayer = new MediaPlayer(soundQuestion);
+
+                // Đăng ký sự kiện khi âm thanh kết thúc
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    // Khi âm thanh kết thúc, phát lại âm thanh
+                    mediaPlayer.seek(javafx.util.Duration.ZERO); // Đặt lại vị trí phát âm thanh về đầu
+                    mediaPlayer.play(); // Phát lại âm thanh
+                });
+
+                // Phát âm thanh khi nó đã sẵn sàng
+                mediaPlayer.play();
+            } else {
+                System.out.println("Không tìm thấy file âm thanh khi ăn mồi! Kiểm tra lại đường dẫn.");
+            }
+        } catch (Exception e) {
+            System.out.println("Đã xảy ra lỗi khi tạo MediaPlayer: " + e.getMessage());
+        }
     }
 
+    public void playSound() {
+        // Phát âm thanh khi cần
+        if (mediaPlayer != null) {
+            System.out.println("Có âm thanh câu hỏi");
+            mediaPlayer.play();
+        }
+    }
+
+    
     @FXML
     public void handleOption1() {
         handleAnswer(1); // Gọi phương thức xử lý với đáp án 1

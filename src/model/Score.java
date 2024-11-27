@@ -1,5 +1,7 @@
 package model;
 
+import controller.SharedData;
+
 public class Score {
 	private int currentScore;
 
@@ -18,7 +20,15 @@ public class Score {
 	public void resetScore() {
 		this.currentScore=0;
 	}
-	public void increaseScore(int points) {
-		this.currentScore+=points;
+	public void increaseScore() {
+	    double speed = SharedData.getSpeed(); // Lấy giá trị Speed từ SharedData
+	    if (speed == 100) {
+	        this.currentScore += 20;
+	    } else if (speed == 200) {
+	        this.currentScore += 10;
+	    } else if (speed == 300) {
+	        this.currentScore += 5;
+	    }
 	}
+
 }
