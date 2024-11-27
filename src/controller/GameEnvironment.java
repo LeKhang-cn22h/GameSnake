@@ -36,7 +36,7 @@ public class GameEnvironment {
         LocalTime time = LocalTime.now();
         int hour = time.getHour(); // Lấy giờ hiện tại
 
-        if (hour >= 6 && hour < 18) {
+        if (hour > 6 && hour<18) {
             // Tạo một Image từ đường dẫn file hoặc URL
 
             Image image = new Image(getClass().getResource("/view/image_weather/sun.png").toExternalForm()); // Đảm bảo sử dụng đúng đường dẫn

@@ -44,7 +44,6 @@ public class Main extends Application {
 		            // Tải giao diện đăng nhập (LoginView.fxml) đầu tiên
 		            Parent root = FXMLLoader.load(getClass().getResource(resource));
 		            Scene scene = new Scene(root);
-		//            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		            
 			    	primaryStage.setScene(scene);
 		            primaryStage.setTitle(title);
