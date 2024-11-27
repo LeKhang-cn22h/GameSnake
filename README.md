@@ -1,6 +1,6 @@
-# 🐍 Snake Survival
+# 🐍 Snake Hungry
 
-**Snake Survival** là một tựa game rắn săn mồi cổ điển với giao diện hiện đại, nơi bạn điều khiển một con rắn trong thế giới đầy thử thách. Mục tiêu của game là ăn mồi để lớn lên, tránh va chạm và đạt điểm cao. Với các chế độ chơi mới và hệ thống bảng xếp hạng, game mang đến trải nghiệm đa dạng và đầy cạnh tranh.
+**Snake Hungry** là một tựa game rắn săn mồi cổ điển với giao diện hiện đại, nơi bạn điều khiển một con rắn trong thế giới đầy thử thách. Mục tiêu của game là ăn mồi để lớn lên, tránh va chạm và đạt điểm cao. Với các chế độ chơi mới và hệ thống bảng xếp hạng, game mang đến trải nghiệm đa dạng và đầy cạnh tranh.
 
 ---
 
@@ -88,13 +88,17 @@ Chúng tôi luôn chào đón sự đóng góp từ cộng đồng! Hãy làm th
 
 ## 👥 Team phát triển
 
-- 🌤️ **API Thời tiết, Tùy chỉnh (Màu rắn và nền map), Va chạm với chướng ngại, File, Xử lý dữ liệu bảng điểm**: Nguyễn Thành Đạt.  
-- 🐍🍎  **Dựng map và rắn, Mồi với di chuyển, Ăn, Va chạm với mồi, thân, và tường, Xử lý dữ liệu câu hỏi**: Lê Tuấn Khang.  
-- 🖌️📊 **Thiết kế giao diện (Đăng nhập, Đăng ký, Hướng dẫn, Trang chủ, Bảng xếp hạng, Chế độ), Âm thanh, Hình ảnh, Tốc độ rắn, Hiệu ứng ăn mồi, Xử lý dữ liệu tài khoản**: Hồ Huỳnh Nhu.  
+- Nguyễn Thành Đạt: 🌤️ **API Thời tiết, Tùy chỉnh (Màu rắn và nền map), Va chạm với chướng ngại, File, Xử lý dữ liệu bảng điểm**.  
+- Lê Tuấn Khang: 🐍🍎  **Dựng map và rắn, Mồi với di chuyển, Ăn, Va chạm với mồi, thân, và tường, Xử lý dữ liệu câu hỏi**.  
+- Hồ Huỳnh Nhu: 🖌️📊 **Thiết kế giao diện (Đăng nhập, Đăng ký, Hướng dẫn, Trang chủ, Bảng xếp hạng, Chế độ), Âm thanh, Hình ảnh, Tốc độ rắn, Hiệu ứng ăn mồi, Xử lý dữ liệu tài khoản**.  
 
 ## 📞 Thông tin liên hệ
 
 - 📧 **Email**: nguyenthanhdat121204@gmail.com
+- 📧 **Email**: hhnhu2003@gmail.com
+- 📧 **Email**: chube02082017@gmail.com
 ---
 
-<center>**Made by Nhóm 1 ❤️**</center>
+<div align="center">  
+  **Made by Nhóm 1 ❤️ sinh viên UTH**  
+</div>
