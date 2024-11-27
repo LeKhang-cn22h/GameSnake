@@ -60,20 +60,19 @@
 
 ## 🗺️ Lộ trình phát triển
 
-[x] **v0.1 - Test**
-  [x] Hệ thống điều khiển cơ bản.  
-  [x] Hệ thống mồi và chướng ngại vật cơ bản.  
-  [x] Lưu điểm số vào cơ sở dữ liệu.
-[x] **v0.2 - Beta** (phiên bản hiện tại)
-  [x] Chế độ chơi đa dạng: Cổ điển, Tự do, Chướng ngại vật, Thử thách.  
-  [x] Bảng xếp hạng và tính năng Multiplayer.  
-  [x] Hiển thị thông tin thời tiết ngoài trời.
-  [x] Thêm các loại mồi mới: **NORMAL**, **SLOW**, **SPEED**, **QUIZZ**.
-[ ] **v1.0 - Phiên bản chính thức** 
-  [ ] Tính năng Multiplayer.  
-  [ ] Âm thanh và hiệu ứng đồ họa sống động.
-  [ ] Tích hợp AI vào chướng ngại vật.
-
+- [x] **v0.1 - Test**
+  - [x] Hệ thống điều khiển cơ bản.  
+  - [x] Hệ thống mồi và chướng ngại vật cơ bản.  
+  - [x] Lưu điểm số vào cơ sở dữ liệu.
+- [x] **v0.2 - Beta** (phiên bản hiện tại)
+  - [x] Chế độ chơi đa dạng: Cổ điển, Tự do, Chướng ngại vật, Thử thách.  
+  - [x] Bảng xếp hạng và tính năng Multiplayer.  
+  - [x] Hiển thị thông tin thời tiết ngoài trời.  
+  - [x] Thêm các loại mồi mới: **NORMAL**, **SLOW**, **SPEED**, **QUIZZ**.
+- [ ] **v1.0 - Phiên bản chính thức**
+  - [ ] Tính năng Multiplayer.  
+  - [ ] Âm thanh và hiệu ứng đồ họa sống động.  
+  - [ ] Tích hợp AI vào chướng ngại vật.
 ---
 
 ## 🤝 Đóng góp
