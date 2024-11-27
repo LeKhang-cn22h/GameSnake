@@ -64,7 +64,7 @@
   - [x] Hệ thống điều khiển cơ bản.  
   - [x] Hệ thống mồi và chướng ngại vật cơ bản.  
   - [x] Lưu điểm số vào cơ sở dữ liệu.
-- [x] **v0.2 - Beta** (phiên bản hiện tại)
+- [x] **v0.2 - Beta** (**_phiên bản hiện tại_**)
   - [x] Chế độ chơi đa dạng: Cổ điển, Tự do, Chướng ngại vật, Thử thách.  
   - [x] Bảng xếp hạng và tính năng Multiplayer.  
   - [x] Hiển thị thông tin thời tiết ngoài trời.  
