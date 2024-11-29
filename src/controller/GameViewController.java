@@ -561,7 +561,7 @@ public class GameViewController {
  // Phương thức khởi tạo âm thanh cho game
     private void initializeSounds() {
         // Âm thanh khi ăn mồi
-        URL eatResource = getClass().getResource("/view/music/SoundMove.ogg");
+        URL eatResource = getClass().getResource("/view/music/AnMoi.ogg");
         if (eatResource != null) {
             eatSound = new AudioClip(eatResource.toString());
         } else {
