@@ -186,6 +186,7 @@ public class MenuViewController {
                 "Chế độ 2: Chế độ tự do\n" +
                 "Chế độ 3: Chế độ vượt chướng ngại vật\n" +
                 "Chế độ 4: Chế độ thử thách\n" +
+                "Trong chế độ 4 sẽ có các loại mồi đặc biệt đang chờ bạn khám phá.\n" +
                 
                 "Chúc bạn chơi game vui vẻ!"
         );
