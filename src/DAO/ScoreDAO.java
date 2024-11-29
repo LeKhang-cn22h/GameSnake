@@ -11,10 +11,6 @@ import model.Score;
 
 public class ScoreDAO implements DAOInterface<Score> {
 
-    /**
-     * Lấy thể hiện của ScoreDAO (Singleton)
-     * @return Thể hiện của ScoreDAO
-     */
     public static ScoreDAO getInstance() {
         return new ScoreDAO();
     }

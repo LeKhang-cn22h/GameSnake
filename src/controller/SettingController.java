@@ -39,7 +39,7 @@ public class SettingController {
     @FXML
     private Button btnBgrOk; // Nút xác nhận chọn hình nền
     @FXML 
-    private Slider speedSlider; // Slider để điều chỉnh tốc độ game
+    private Slider speedSlider = new Slider(); // Slider để điều chỉnh tốc độ game
 
     /**
      * Mở cửa sổ để chọn màu cho rắn.

@@ -56,7 +56,11 @@ public class RankingController {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        // Lấy danh sách xếp hạng từ cơ sở dữ liệu theo chế độ đã chọn
+        ObservableList<Rank> ranks = FXCollections.observableArrayList(ScoreDAO.getInstance().getTopScores(10, 1));
 
+        // Cập nhật bảng xếp hạng với dữ liệu lấy được
+        tableView.setItems(ranks);
         // Tạo và phát nhạc nền cho bảng xếp hạng
         Media rankingMusic = new Media(getClass().getResource("/view/music/NhacNen.ogg").toString());
         rankingMediaPlayer = new MediaPlayer(rankingMusic);

@@ -82,6 +82,7 @@ public class GameViewController {
     @FXML
     private Label userTxt;
     private boolean isGameOver = false;  // Biến theo dõi trạng thái game
+    private boolean isHome = false;
     private Thread gameThread;  // Thread để tự động di chuyển rắn
     @FXML
     private boolean isPaused = false;
@@ -207,7 +208,7 @@ public class GameViewController {
     private void addOb() {
         obImage = getClass().getResource("/view/image_chuongngaivat/stone.png").toExternalForm();  // Lấy đường dẫn hình ảnh
         for (Position position : ob) {
-            Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
+            Button button = (Button) gameGrid.getChildren().get(position.getRow() * (gameConfig.getMapSize()) + position.getCol());
             button.setStyle("-fx-background-image: url('" + obImage + "'); " +
                     "-fx-background-size: cover; " +
                     "-fx-background-repeat: no-repeat; " +
@@ -254,7 +255,7 @@ public class GameViewController {
     private void drawSnake() {
         for (int row = 0; row < gameConfig.getMapSize(); row++) {
             for (int col = 0; col < gameConfig.getMapSize(); col++) {
-                Button button = (Button) gameGrid.getChildren().get(row * gameConfig.getMapSize() + col);
+                Button button = (Button) gameGrid.getChildren().get(row * (gameConfig.getMapSize()) + col);
                 button.setStyle("-fx-background-color: transparent;");
                 button.setFocusTraversable(false);
 
@@ -270,7 +271,7 @@ public class GameViewController {
         // Duyệt qua các vị trí của cơ thể rắn để vẽ
         for (int i = 0; i < snake.getBody().size(); i++) {
             Position position = snake.getBody().get(i);
-            Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
+            Button button = (Button) gameGrid.getChildren().get(position.getRow() * (gameConfig.getMapSize()) + position.getCol());
             drawHead(); // Vẽ đầu rắn
 
             if (i == snake.getBody().size() - 1) {
@@ -312,7 +313,7 @@ public class GameViewController {
 	// Hàm vẽ đầu rắn
     private void drawHead() {
         Position position = snake.getBody().get(0); // Vị trí đầu rắn
-        Button button = (Button) gameGrid.getChildren().get(position.getRow() * gameConfig.getMapSize() + position.getCol());
+        Button button = (Button) gameGrid.getChildren().get(position.getRow() * (gameConfig.getMapSize()) + position.getCol());
         String headImage = getHeadImageBasedOnDirection(); // Lấy hình ảnh đầu rắn theo hướng di chuyển
 
         // Áp dụng hình ảnh cho đầu rắn
@@ -335,7 +336,7 @@ public class GameViewController {
     private void drawFood() {
         String imageUrl = getFoodImageUrl(); // Lấy URL hình ảnh thực phẩm
 
-        Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * gameConfig.getMapSize() + food.getPosition().getCol());
+        Button foodButton = (Button) gameGrid.getChildren().get(food.getPosition().getRow() * (gameConfig.getMapSize()) + food.getPosition().getCol());
         foodButton.setStyle("-fx-background-image: url('" + imageUrl + "'); -fx-background-size: 33px 33px; -fx-background-repeat: no-repeat; -fx-background-color: transparent; -fx-background-position: center;");
     }
 
@@ -391,12 +392,13 @@ public class GameViewController {
                         
                         // Kiểm tra va chạm, di chuyển rắn và cập nhật giao diện
                         checkCollision();
-                        snake.move(newHead);
-
-                        drawSnake();  // Vẽ lại rắn trên grid
-                        drawFood();   // Vẽ lại mồi
-                        drawHead();   // Vẽ lại đầu rắn
-                        snake.updateDirectionAfterMove();  // Cập nhật hướng đi sau mỗi lần di chuyển
+                        if(!isHome) {
+	                        snake.move(newHead);
+	                        drawSnake();  // Vẽ lại rắn trên grid
+	                        drawFood();   // Vẽ lại mồi
+	                        drawHead();   // Vẽ lại đầu rắn
+	                        snake.updateDirectionAfterMove();  // Cập nhật hướng đi sau mỗi lần di chuyển
+                        }else isHome = false;
                     });
                 }
                 try {
@@ -559,7 +561,7 @@ public class GameViewController {
  // Phương thức khởi tạo âm thanh cho game
     private void initializeSounds() {
         // Âm thanh khi ăn mồi
-        URL eatResource = getClass().getResource("/view/music/score.ogg");
+        URL eatResource = getClass().getResource("/view/music/SoundMove.ogg");
         if (eatResource != null) {
             eatSound = new AudioClip(eatResource.toString());
         } else {
@@ -657,12 +659,14 @@ public class GameViewController {
         
         // Các nút cho phép chơi lại hoặc đóng trò chơi
         ButtonType buttonPlayAgain = new ButtonType("Chơi lại");
-        ButtonType buttonExit = new ButtonType("Đóng", ButtonType.CLOSE.getButtonData());
+        ButtonType buttonExit = new ButtonType("Tiếp tục", ButtonType.CLOSE.getButtonData());
         alertend.getButtonTypes().setAll(buttonPlayAgain, buttonExit);
         
         Optional<ButtonType> result = alertend.showAndWait();
         if (result.isPresent() && result.get() == buttonPlayAgain) {
             initialize();  // Khởi tạo lại trò chơi nếu chọn chơi lại
+        }else {
+        	resumeGame();
         }
     }
 
@@ -682,7 +686,7 @@ public class GameViewController {
         alert.setContentText("Bạn có muốn chơi lại hay thoát?");
         
         ButtonType buttonPlayAgain = new ButtonType("Chơi lại");
-        ButtonType buttonExit = new ButtonType("Trang chủ");
+        ButtonType buttonExit = new ButtonType("Đóng");
         alert.getButtonTypes().setAll(buttonPlayAgain, buttonExit);
         
         // Hiển thị hộp thoại và chờ phản hồi của người dùng
@@ -691,6 +695,8 @@ public class GameViewController {
         if (result.isPresent() && result.get() == buttonPlayAgain) {
             initialize();  // Khởi tạo lại trò chơi nếu chọn chơi lại
         } else {
+//        	Platform.exit(); // Thoát ứng dụng JavaFX
+//            System.exit(0);  // Đảm bảo thoát hoàn toàn
         	showMenuMain();
         }
     }
@@ -715,6 +721,7 @@ public class GameViewController {
     
     private void showMenuMain() {
         try {
+        	isHome = true;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/menuView.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) scoreLabel.getScene().getWindow();

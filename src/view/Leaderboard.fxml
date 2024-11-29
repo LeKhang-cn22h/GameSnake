@@ -16,7 +16,7 @@
          <children>
             <Pane prefHeight="50.0" prefWidth="700.0">
                <children>
-                  <MenuButton fx:id="menuMode" layoutX="563.0" layoutY="5.0" mnemonicParsing="false" onAction="#getRanking" text="Chọn Mode">
+                  <MenuButton fx:id="menuMode" layoutX="563.0" layoutY="5.0" mnemonicParsing="false" onAction="#getRanking" text="Cổ Điển">
                     <items>
                         <MenuItem fx:id="mode1" mnemonicParsing="false" onAction="#getRanking" text="Cổ Điển" />
                         <MenuItem fx:id="mode2" mnemonicParsing="false" onAction="#getRanking" text="Tự Do" />
@@ -25,7 +25,7 @@
                     </items>
                   </MenuButton>
                   <Button fx:id="btnBack" mnemonicParsing="false" onAction="#handleBackButton" style="-fx-background-color: #FFFFCC;" text="Quay lại" />
-                  <Label fx:id="labMode" layoutX="319.0" layoutY="3.0" text="Label" textAlignment="CENTER">
+                  <Label fx:id="labMode" layoutX="319.0" layoutY="3.0" text="Cổ Điển" textAlignment="CENTER">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
